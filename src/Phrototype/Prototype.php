@@ -1,6 +1,6 @@
 <?php
 
-namespace Phrototype\Prototype;
+namespace Phrototype;
 
 abstract class Prototype {
 	private $properties;

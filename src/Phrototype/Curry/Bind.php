@@ -2,7 +2,10 @@
 
 namespace Phrototype\Curry;
 
-class Curry {
+class Bind {
+	public function __invoke($args) {
+		return call_user_func_array($self::curry, func_get_args());
+	}
 
 	public static function curry($fn, $arg, $obj = null) {
 		return function() use ($fn, $arg, $obj) {
@@ -34,5 +37,3 @@ class Curry {
 
 	public static function …() {return new PartialArg();}
 }
-
-class PartialArg{}
