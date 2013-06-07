@@ -2,4 +2,4 @@
 
 namespace Phrototype\Curry;
 
-final class PartialArg() {}
+final class PartialArg {}

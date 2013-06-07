@@ -2,6 +2,8 @@
 
 namespace Phrototype\Curry;
 
+use Phrototype\Curry\PartialArg;
+
 class Bind {
 	public function __invoke($args) {
 		return call_user_func_array($self::curry, func_get_args());
@@ -22,11 +24,11 @@ class Bind {
 		$partialArgs = array_slice(func_get_args(), 1);
 		return function() use ($fn, $partialArgs) {
 			$fnArgs = func_get_args();
-			$args = array();
+			$args = [];
 			$i = 0;
 			foreach($partialArgs as $arg) {
 				$args[] = (gettype($arg) == 'object'
-						&& get_class($arg) == 'PartialArg') ?
+						&& get_class($arg) == 'Phrototype\Curry\PartialArg') ?
 					array_shift($fnArgs) :
 					$partialArgs[$i];
 				$i += 1;
@@ -36,4 +38,8 @@ class Bind {
 	}
 
 	public static function …() {return new PartialArg();}
+
+	// Alias to … for people too boring to use …
+	// or portability or somesuch
+	public static function ___() {return new PartialArg();}
 }
