@@ -10,12 +10,17 @@ abstract class Prototype {
 		$this->properties = $properties;
 	}
 
-	public static function create($proto, $class, $args) {
+	public static function create($proto = null, $class, $args = []) {
 		if(!class_exists($class)) {
 			// Haha!
-			eval("class $class extends Prototype {}");
+			eval("class $class extends Phrototype\Prototype {}");
 		}
-		$obj = new $class(array_merge($proto->getProperties(), $args));
+		$properties = [];
+		$properties = $proto ?
+			  array_merge($proto->getProperties(), $args)
+			: $args;
+		
+		$obj = new $class($properties);
 		$obj->setPrototype($proto);
 
 		return $obj;
@@ -28,7 +33,6 @@ abstract class Prototype {
 	}
 
 	public function __set($name, $value) {
-
 		if(gettype($value) === 'object'
 			&& get_class($value) === 'Closure') {
 			return $this->addProperty($name, $value);
