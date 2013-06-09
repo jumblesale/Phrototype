@@ -2,7 +2,7 @@
 
 namespace Phrototype;
 
-abstract class Prototype {
+class Prototype {
 	private $properties;
 	private $prototype;
 
@@ -10,8 +10,8 @@ abstract class Prototype {
 		$this->properties = $properties;
 	}
 
-	public static function create($proto = null, $class, $args = []) {
-		if(!class_exists($class)) {
+	public static function create($proto = null, $args = [], $class = null) {
+		if($class && !class_exists($class)) {
 			// Haha!
 			eval("class $class extends Phrototype\Prototype {}");
 		}
@@ -20,7 +20,7 @@ abstract class Prototype {
 			  array_merge($proto->getProperties(), $args)
 			: $args;
 		
-		$obj = new $class($properties);
+		$obj = $class ? new $class($properties) : new Prototype($properties);
 		$obj->setPrototype($proto);
 
 		return $obj;

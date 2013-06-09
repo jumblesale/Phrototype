@@ -7,13 +7,13 @@ use Phrototype\Prototype;
 class PrototypalInheritanceTest extends \PHPUnit_Framework_TestCase {
 
 	public function setUp() {
-		$this->animal = Prototype::create(null, 'Animal');
+		$this->animal = Prototype::create();
 
-		$this->cat = Prototype::create($this->animal, 'Cat', [
+		$this->cat = Prototype::create($this->animal, [
 			'name' => 'Chairman Meow', 'sound' => 'puurrRRRrrRRRrr',
 		]);
 
-		$this->dog = Prototype::create($this->animal, 'Dog', [
+		$this->dog = Prototype::create($this->animal, [
 			'name' => 'Colonel Charles Barksmoore', 'sound' => 'woof!',
 		]);
 	}
@@ -35,10 +35,8 @@ class PrototypalInheritanceTest extends \PHPUnit_Framework_TestCase {
 			$this->cat->says()
 		);
 
-		$dogSays = $this->dog->says;
-
 		$this->assertNull(
-			$dogSays
+			$this->dog->says;
 		);
 	}
 

@@ -6,7 +6,7 @@ use Phrototype\Prototype;
 
 class PropertyInheritanceTest extends \PHPUnit_Framework_TestCase {
 	public function testPropertiesAreInherited() {
-		$prototype = Prototype::create(null, 'Philosopher');
+		$prototype = Prototype::create();
 
 		$prototype->name = 'Kierkegaard';
 
@@ -16,7 +16,7 @@ class PropertyInheritanceTest extends \PHPUnit_Framework_TestCase {
 			'What does it mean to have a property exist?'
 		);
 
-		$inheritor = Prototype::create($prototype, 'Philosopher');
+		$inheritor = Prototype::create($prototype);
 
 		$this->assertEquals(
 			'Kierkegaard',
@@ -42,7 +42,7 @@ class PropertyInheritanceTest extends \PHPUnit_Framework_TestCase {
 			return $a + $b;
 		};
 
-		$proto = Prototype::create(null, 'Adder');
+		$proto = Prototype::create();
 
 		$proto->add = $add;
 
@@ -57,7 +57,7 @@ class PropertyInheritanceTest extends \PHPUnit_Framework_TestCase {
 			'Prototype\'s add method can be invoked'
 		);
 
-		$inheritor = Prototype::create($proto, 'Adder');
+		$inheritor = Prototype::create($proto);
 
 		$this->assertTrue(
 			is_callable([$inheritor, 'add']),
