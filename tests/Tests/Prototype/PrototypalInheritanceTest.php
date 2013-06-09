@@ -36,7 +36,7 @@ class PrototypalInheritanceTest extends \PHPUnit_Framework_TestCase {
 		);
 
 		$this->assertNull(
-			$this->dog->says;
+			$this->dog->says
 		);
 	}
 
