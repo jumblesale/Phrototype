@@ -26,6 +26,10 @@ class Prototype {
 		return $obj;
 	}
 
+	public function __clone() {
+		return $self::create($this);
+	}
+
 	public function __get($name) {
 		if(array_key_exists($name, $this->properties)) {
 			return $this->properties[$name];
