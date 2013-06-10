@@ -16,37 +16,44 @@ class Router extends Prototype {
 
 		$verbRoutes = $this->routes[$verb];
 
-		$params = [];
-		preg_match_all('/^\/dog\/([^\/]+)$/', $path, $params);
-
 		// Try to match the path to a route
-		foreach($verbRoutes as $route => $routeObject) {
-			$matches = [];
-			if(
-				preg_match_all(
-					'/^\/dog\/\:([^\/]+)$/',
-					$route, $matches
-				)
-			) {
-				return call_user_method_array(
-					'callback', $routeObject, [$params[1][0]]
+		$return;
+		$this->findRoute(
+			$path, $verbRoutes,
+			function($route) use ($path, &$return) {
+				$args = $route->parsePath($path);
+				$return = call_user_func_array(
+					[$route, 'callback'],
+					$args
 				);
 			}
-		}
+		);
+		return $return;
 	}
 
 	public function matches($verb, $path) {
-		if(!array_key_exists($verb, $this->routes)) {
-			return false;
+		$routes = $this->routes[$verb];
+
+		if(in_array($path, array_keys($routes))) {
+			return true;
 		}
-		$verbRoutes = $this->routes[$verb];
-		return in_array($path, array_keys($verbRoutes));
+		
+		return $this->findRoute($path, $routes) !== false;
+	}
+
+	public function findRoute($path, $routes, $fn = null) {
+		foreach($routes as $route => $routeObject) {
+			if($routeObject->match($path)) {
+				return $fn ?
+					   $fn($routeObject)
+					 : $routeObject;
+			}
+		}
+		return false;
 	}
 
 	public function route($verb, $path, $fn = null) {
-		$route = Prototype::create(null, [
-			'callback' => $fn, 'path' => $path,
-		], 'Route');
+		$route = new Route($path, $fn);
 		$this->routes[$verb][$path] = $route;
 
 		return $this;
@@ -77,8 +84,8 @@ class Router extends Prototype {
 			: array($args);
 		array_unshift($args, $verb);
 
-		return call_user_method_array(
-			'route', $this, $args
+		return call_user_func_array(
+			[$this, 'route'], $args
 		);
 	}
 
