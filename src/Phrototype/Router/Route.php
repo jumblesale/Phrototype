@@ -9,7 +9,7 @@ class Route {
 	private $route;
 	private $regex;
 
-	function __construct($route, $callback) {
+	function __construct($route, $callback = null) {
 		$this->callback	= $callback;
 		$this->route	= $route;
 
@@ -17,8 +17,14 @@ class Route {
 			'@^' . preg_replace('@:[^/]+@', '([^/]+)', $route) . '$@';
 	}
 
+	public function regex($v = null) {
+		return $v ?
+			  $this->regex = $v
+			: $this->regex;
+	}
+
 	public function match($path) {
-		return preg_match($this->regex, $path);
+		return (bool)preg_match($this->regex, $path);
 	}
 
 	public function parsePath($path) {
