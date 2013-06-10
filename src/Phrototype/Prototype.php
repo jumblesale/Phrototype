@@ -57,7 +57,7 @@ class Prototype {
 		}
 		array_unshift($args, $this);
 		if(!is_callable($fn)) {
-			// die
+			throw new \Exception("Cannot call $name");
 		}
 		return call_user_func_array($fn->bindTo($this, $this), $args);
 	}

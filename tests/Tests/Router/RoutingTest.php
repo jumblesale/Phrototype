@@ -53,4 +53,14 @@ class RoutingTest extends \PHPUnit_Framework_TestCase {
 			$home->matches('get', '/notapage')
 		);
 	}
+
+	public function testSubsequentRoutesOVerridePreviousOnes() {
+		$home = $this->fixture->get('/home', function() {return false;});
+
+		$this->assertFalse($this->fixture->getRoute('get', '/home')->callback());
+
+		$home2 = $this->fixture->get('/home', function() {return true;});
+
+		$this->assertTrue($this->fixture->getRoute('get', '/home')->callback());
+	}
 }

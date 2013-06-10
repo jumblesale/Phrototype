@@ -2,18 +2,19 @@
 
 namespace Phrototype\Tests\Prototype;
 
-use Phrototype;
+use Phrototype\Router\Router;
 
 class RouterParameterTest extends \PHPUnit_Framework_TestCase {
-	public function testTopLevelPathIsRouted() {
-		return;
-		$router = new Router();
+	public function setUp() {
+		$this->fixture = new Router();
+	}
 
+	public function testSingleParameterIsSet() {
 		$this->assertEquals(
 			'pug is the best kind of dog',
-			$router->get('/dog/:type', function($name) {
-				echo "$dog is the best kind of dog";
-			})->dispatch('/dog/pug')
+			$this->fixture->get('/dog/:type', function($self, $dog) {
+				return "$dog is the best kind of dog";
+			})->dispatch('get', '/dog/pug')
 		);
 	}
 }
