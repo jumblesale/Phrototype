@@ -16,6 +16,20 @@ class RouteTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
+	public function testPathIsGeneratedWithOptionalVariables() {
+		$route = new Route('app/:action/?id/constant/:variable');
+		$regex = $route->regex();
+		$this->assertTrue(
+			(bool)preg_match($regex, '/app/view/3/constant/variable')
+		);
+		$this->assertTrue(
+			(bool)preg_match($regex, '/app/delete/constant/variable')
+		);
+		$this->assertFalse(
+			(bool)preg_match($regex, '/app/delete/3/')
+		);
+	}
+
 	public function testPathCanBeParsed() {
 		$route = new Route('/app/:action/:id');
 		$args = $route->parsePath('/app/view/3');
@@ -23,6 +37,26 @@ class RouteTest extends \PHPUnit_Framework_TestCase {
 			[
 				'action'	=> 'view',
 				'id'		=> 3,
+			],
+			$args
+		);
+	}
+
+	public function testPathWithOptionalParametersCanBeParsed() {
+		$route = new Route('/app/:action/?id');
+		$args = $route->parsePath('/app/view/3');
+		$this->assertEquals(
+			[
+				'action'	=> 'view',
+				'id'		=> 3,
+			],
+			$args
+		);
+		$args = $route->parsePath('/app/view');
+		$this->assertEquals(
+			[
+				'action'	=> 'view',
+				'id'		=> null,
 			],
 			$args
 		);
