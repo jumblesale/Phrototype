@@ -40,4 +40,42 @@ class RouterParameterTest extends \PHPUnit_Framework_TestCase {
 			)->dispatch('get', '/dog/Charles/breed/pug/says/woof')
 		);
 	}
+
+	public function testOptionalParametersAreParsed() {
+		$this->fixture->get('/app/:action/?id');
+
+		$this->assertTrue($this->fixture->matches('get', '/app/view/3'));
+		$this->assertTrue($this->fixture->matches('get', '/app/view'));
+	}
+
+	public function testOptionalParametersAreRouted() {
+		$this->fixture->get('/cocktails/:spirit/?mixer/?name',
+			function($spirit, $mixer = null, $name) {
+				if($mixer) {
+					return implode(' ',
+						[$mixer, 'and', $spirit, 'makes a', $name]);
+				}
+				return $spirit;
+			});
+
+		$this->assertTrue($this->fixture->matches(
+			'get', '/cocktails/gin/pineapple/pin'
+		));
+		$this->assertTrue($this->fixture->matches(
+			'get', '/cocktails/gin'
+		));
+
+		$this->assertEquals(
+			'pineapple and gin makes a pin',
+			$this->fixture->dispatch(
+				'get', '/cocktails/gin/pineapple/pin'
+			)
+		);
+		$this->assertEquals(
+			'gin',
+			$this->fixture->dispatch(
+				'get', '/cocktails/gin'
+			)
+		);
+	}
 }

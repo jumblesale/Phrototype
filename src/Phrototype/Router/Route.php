@@ -12,9 +12,18 @@ class Route {
 	function __construct($route, $callback = null) {
 		$this->callback	= $callback;
 		$this->route	= $route;
-
-		$this->regex =
-			'@^' . preg_replace('@:[^/]+@', '([^/]+)', $route) . '$@';
+		
+		// Create a regex to find all instances of :something
+		$regex = preg_replace('@:[^/]+@', '([^/]+)', $route);
+		// Strip out optional variables (?variable)
+		// The leading / cannot be relied on, for example:
+		// 		/app/:action/?id
+		//		/app/view - should match
+		$regex = preg_replace('@/\?[^/]+@', '/?([^/]+)?', $regex);
+		// Strip the starting slash from the route
+		if($regex{0} === '/') {$regex = substr($regex, 1);}
+		// and include it as an optional
+		$this->regex = '@^/?' . $regex . '/?$@';
 	}
 
 	public function regex($v = null) {
@@ -26,10 +35,10 @@ class Route {
 	public function match($path) {
 		return (bool)preg_match($this->regex, $path);
 	}
-
+	
 	public function parsePath($path) {
 		$argNames	= [];
-		preg_match_all('@:([^/]+)@', $this->route, $argNames);
+		preg_match_all('@[:\?]([^/]+)@', $this->route, $argNames);
 		// Ignore the indexes, just get the values
 		$argNames	= $argNames[1];
 		$matches	= [];
@@ -38,10 +47,11 @@ class Route {
 		array_shift($matches);
 		$args	= [];
 		$i		= 0;
-		foreach($argNames as $name) {
-			$args[$name] = $matches[$i][0];
+		array_map(function($name) use($matches, &$args, &$i) {
+			$value = $matches[$i][0];
+			$args[$name] = $value;
 			$i += 1;
-		}
+		}, $argNames);
 		return $args;
 	}
 
