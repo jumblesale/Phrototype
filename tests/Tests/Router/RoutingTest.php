@@ -35,12 +35,12 @@ class RoutingTest extends \PHPUnit_Framework_TestCase {
 	public function testVerbAccessorsProduceRoutes() {
 		$verbs = ['get', 'put', 'post', 'delete'];
 
-		foreach($verbs as $verb) {
+		array_map(function($verb) {
 			$this->fixture->$verb('/home');
 			$this->assertTrue(
 				$this->fixture->matches($verb, '/home')
 			);
-		}
+		}, $verbs);
 	}
 
 	public function testTopLevelRoute() {
@@ -54,7 +54,7 @@ class RoutingTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
-	public function testSubsequentRoutesOVerridePreviousOnes() {
+	public function testSubsequentRoutesOverridePreviousOnes() {
 		$home = $this->fixture->get('/home', function() {return false;});
 
 		$this->assertFalse($this->fixture->getRoute('get', '/home')->callback());
