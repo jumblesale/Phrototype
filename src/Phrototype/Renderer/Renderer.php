@@ -108,7 +108,7 @@ class Renderer {
 		if(array_key_exists($method, $this->methods)) {
 			$this->method = $method;
 		} else {
-			throw new \Exception("Unrecoginsed rendering method: $method");
+			throw new \Exception("Unrecognised rendering method: $method");
 		}
 		return $this;
 	}
