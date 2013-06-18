@@ -2,9 +2,13 @@
 
 namespace Phrototype\Renderer;
 
+use Phrototype\Logue;
+use Phrototype\Renderer\ExtensionRegisterer;
+
 class Renderer {
 	private $method;
 	private $callback;
+	private $extensionRegisterer;
 	private $methods = [];
 
 	private $defaultMethods = [
@@ -17,33 +21,77 @@ class Renderer {
 			'renderer'	=> 'json',
 		],
 		'text'	=> [
-			'mime'		=> 'text/text',
+			'mime'		=> 'text/plain',
 			'renderer'	=> 'text',
 		]
 	];
 
 	private $renderers = [];
-
-	public function __construct() {
-		if(!$this->methods) {
-			// Default methods
-			$this->registerMethods($this->defaultMethods);
-		}
-	}
-
-	public function registerMethods(array $methods = array()) {
-		array_map(function($method, $methodDetails) {
-			$this->methods[$method] = $methodDetails;
-		}, array_keys($methods), array_values($methods));
-
+	private function defaultRenderers() {
 		// Add default renderers
-		$this->renderers = [
+		return [
 			'text'	=> function($data) {return $data;},
 			'json'	=> function($data) {return json_encode($data);},
 		];
 	}
 
+	public function __construct() {
+		$this->registerDefaultMethods();
+		$this->extensionRegisterer = new ExtensionRegisterer();
+	}
+
+	public function registerDefaultMethods() {
+		$this->renderers = $this->defaultRenderers();
+
+		$methods = $this->defaultMethods;
+		array_map(function($method, $methodDetails) {
+			$this->registerMethod($method, $methodDetails);
+		}, array_keys($methods), array_values($methods));
+	}
+
 	public function getMethods() {return $this->methods;}
+	public function getRenderers() {return $this->renderers;}
+
+	public function registerExtension($obj) {
+		if($obj = $this->extensionRegisterer->loadExtension($obj)) {
+			if($this->registerMethod(
+					$obj->name(),
+					$obj->load(),
+					$obj->render()
+			)) {
+				Logue::log("Successfully loaded renderer extension: " . $obj->name(), Logue::INFO);
+				return true;
+			} else {
+				Logue::log("Failed to load extension: " . $obj->name(), Logue::WARN);
+				return false;
+			}
+		}
+		return false;
+	}
+
+	public function registerMethod(
+		$name, array $details, $renderer = null
+	) {
+		if(!array_key_exists('renderer', $details)) {
+			throw new \Exception("No renderer provided for $name");
+		}
+		$this->methods[$name] = $details;
+		$rendererName = $details['renderer'];
+		// Check if this method references an existing renderer
+		if(!array_key_exists($rendererName, $this->renderers)) {
+			if(!$renderer) {
+				throw new \Exception("$name requires an unregistered renderer but does not provide one");
+			}
+			if(gettype($renderer) === 'object'
+				&& get_class($renderer) === 'Closure') {
+				// Add the callback to the list of renderers
+				$this->renderers[$rendererName] = $renderer;
+			} else {
+				throw new \Exception("$name provides a renderer which is not a valid callback");
+			}
+		}
+		return true;
+	}
 
 	public function method($method, $callback = null) {
 		if(is_callable($method)) {
@@ -53,7 +101,7 @@ class Renderer {
 		if(array_key_exists($method, $this->methods)) {
 			$this->method = $method;
 		} else {
-			throw new \Exception("Unrecoginsed rendering method: $method");
+			throw new \Exception("Unrecognised rendering method: $method");
 		}
 		return $this;
 	}

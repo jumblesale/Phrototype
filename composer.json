@@ -3,5 +3,8 @@
 	"description": "Do you not know, my son, with how little wisdom the world is governed?",
 	"autoload": {
 		"psr-0": { "Phrototype\\": "src/", "": "src/" }
+	},
+	"require": {
+		"mustache/mustache": "~2.1"
 	}
 }
