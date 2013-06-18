@@ -10,6 +10,18 @@ class ExtensionTest extends \PHPUnit_Framework_TestCase {
 		$this->renderer = new Renderer();
 	}
 
+	public function testRegisterMethod() {
+		$method = [
+			'mime'		=> 'text/plain',
+			'renderer'	=> 'json'
+		];
+
+		$this->renderer->registerMethod('test', $method);
+
+		$r = $this->renderer->getMethods()['test'];
+
+		$this->assertEquals($method, $r);
+	}
 
 	public function testRegisteringAnUnloadableExtensionDoesntRegister() {
 		// No required methods
@@ -18,5 +30,26 @@ class ExtensionTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse(
 			$this->renderer->registerExtension($mock)
 		);
+
+		$method = [];
+	}
+
+	public function testRegisterMethodWithCustomRenderer() {
+		$method = [
+			'mime'		=> 'text/plain',
+			'renderer'	=> 'dog'
+		];
+
+		$this->renderer->registerMethod('dog', $method, function($data) {
+			return preg_replace(
+				'/corgi/', 'pug', $data
+			);
+		});
+
+		$r = $this->renderer->method('dog')->render(
+			'corgi is the best dog'
+		);
+
+		$this->assertEquals('pug is the best dog', $r);
 	}
 }

@@ -19,7 +19,7 @@ class Renderer {
 			'renderer'	=> 'json',
 		],
 		'text'	=> [
-			'mime'		=> 'text/text',
+			'mime'		=> 'text/plain',
 			'renderer'	=> 'text',
 		]
 	];
@@ -41,12 +41,12 @@ class Renderer {
 	}
 
 	public function registerDefaultMethods() {
+		$this->renderers = $this->defaultRenderers();
+
 		$methods = $this->defaultMethods;
 		array_map(function($method, $methodDetails) {
-			$this->methods[$method] = $methodDetails;
+			$this->registerMethod($method, $methodDetails);
 		}, array_keys($methods), array_values($methods));
-
-		$this->renderers = $this->defaultRenderers();
 	}
 
 	public function getMethods() {return $this->methods;}
@@ -69,6 +69,35 @@ class Renderer {
 			);
 			return false;
 		}
+
+		$name = $obj->name();
+		if($this->registerMethod(
+			$name, $obj->load(), $obj->renderer()
+		)) {
+			Logue::log("Successfully loaded renderer extension: $name", Logue::INFO);
+		}
+	}
+
+	public function registerMethod($name, $details, $renderer = null) {
+		if(!array_key_exists('renderer', $details)) {
+			throw new \Exception("No renderer provided for $name");
+		}
+		$this->methods[$name] = $details;
+		$rendererName = $details['renderer'];
+		// Check if this method references an existing renderer
+		if(!array_key_exists($rendererName, $this->renderers)) {
+			if(!$renderer) {
+				throw new \Exception("$name requires an unregistered renderer but does not provide one");
+			}
+			if(gettype($renderer) === 'object'
+				&& get_class($renderer) === 'Closure') {
+				// Add the callback to the list of renderers
+				$this->renderers[$rendererName] = $renderer;
+			} else {
+				throw new \Exception("$name provides a renderer which is not a valid callback");
+			}
+		}
+		return true;
 	}
 
 	public function method($method, $callback = null) {
