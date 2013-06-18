@@ -2,6 +2,8 @@
 
 namespace Phrototype\Renderer;
 
+use Phrototype\Logue;
+
 class Renderer {
 	private $method;
 	private $callback;
@@ -61,7 +63,10 @@ class Renderer {
 					get_class($obj)
 				))
 		) {
-			echo "Failed loading $class: does not implement iExtension interface";
+			Logue::log(
+				"Failed loading $class: does not implement iExtension interface",
+				Logue::WARN
+			);
 			return false;
 		}
 	}
