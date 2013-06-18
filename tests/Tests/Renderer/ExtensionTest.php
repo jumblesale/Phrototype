@@ -30,8 +30,6 @@ class ExtensionTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse(
 			$this->renderer->registerExtension($mock)
 		);
-
-		$method = [];
 	}
 
 	public function testRegisterMethodWithCustomRenderer() {

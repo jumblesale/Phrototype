@@ -5,11 +5,11 @@ namespace Phrototype\Renderer;
 use Phrototype\Logue;
 
 class ExtensionRegisterer {
-
 	// loadExtension by default
 	public function __invoke($args) {
 		return call_user_func_array([$this, 'loadExtension'], func_get_args());
 	}
+
 	public function loadExtension($obj) {
 		if(gettype($obj) === 'string') {
 			$obj = new $obj();
@@ -39,12 +39,5 @@ class ExtensionRegisterer {
 			throw new \Exception("Could not load extension $class: no name or details provided. Check the extension implements name() and load() methods correctly");
 		}
 		return $obj;
-		/*if($this->loadMethod(
-			$name, $details, $obj->render()
-		)) {
-			Logue::log("Successfully loaded renderer extension: $name", Logue::INFO);
-			return true;
-		}
-		return false;*/
 	}
 }
