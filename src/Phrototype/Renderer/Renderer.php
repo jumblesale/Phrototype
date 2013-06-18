@@ -23,27 +23,48 @@ class Renderer {
 	];
 
 	private $renderers = [];
-
-	public function __construct() {
-		if(!$this->methods) {
-			// Default methods
-			$this->registerMethods($this->defaultMethods);
-		}
-	}
-
-	public function registerMethods(array $methods = array()) {
-		array_map(function($method, $methodDetails) {
-			$this->methods[$method] = $methodDetails;
-		}, array_keys($methods), array_values($methods));
-
+	private function defaultRenderers() {
 		// Add default renderers
-		$this->renderers = [
+		return [
 			'text'	=> function($data) {return $data;},
 			'json'	=> function($data) {return json_encode($data);},
 		];
 	}
 
+	public function __construct() {
+		if(!$this->methods) {
+			// Default methods
+			$this->registerDefaultMethods();
+		}
+	}
+
+	public function registerDefaultMethods() {
+		$methods = $this->defaultMethods;
+		array_map(function($method, $methodDetails) {
+			$this->methods[$method] = $methodDetails;
+		}, array_keys($methods), array_values($methods));
+
+		$this->renderers = $this->defaultRenderers();
+	}
+
 	public function getMethods() {return $this->methods;}
+
+	public function registerExtension($obj) {
+		if(gettype($obj) === 'string') {
+			$obj = new $obj();
+		}
+		$class = get_class($obj);
+		// This is hideous
+		if(!in_array(
+			'\Phrototype\Renderer\iExtension',
+				class_implements(
+					get_class($obj)
+				))
+		) {
+			echo "Failed loading $class: does not implement iExtension interface";
+			return false;
+		}
+	}
 
 	public function method($method, $callback = null) {
 		if(is_callable($method)) {
