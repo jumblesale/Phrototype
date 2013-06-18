@@ -3,10 +3,12 @@
 namespace Phrototype\Renderer;
 
 use Phrototype\Logue;
+use Phrototype\Renderer\ExtensionRegisterer;
 
 class Renderer {
 	private $method;
 	private $callback;
+	private $extensionRegisterer;
 	private $methods = [];
 
 	private $defaultMethods = [
@@ -34,10 +36,8 @@ class Renderer {
 	}
 
 	public function __construct() {
-		if(!$this->methods) {
-			// Default methods
-			$this->registerDefaultMethods();
-		}
+		$this->registerDefaultMethods();
+		$this->extensionRegisterer = new ExtensionRegisterer();
 	}
 
 	public function registerDefaultMethods() {
@@ -50,35 +50,28 @@ class Renderer {
 	}
 
 	public function getMethods() {return $this->methods;}
+	public function getRenderers() {return $this->renderers;}
 
 	public function registerExtension($obj) {
-		if(gettype($obj) === 'string') {
-			$obj = new $obj();
+		if($obj = $this->extensionRegisterer->loadExtension($obj)) {
+			if($this->registerMethod(
+					$obj->name(),
+					$obj->load(),
+					$obj->render()
+			)) {
+				Logue::log("Successfully loaded renderer extension: " . $obj->name(), Logue::INFO);
+				return true;
+			} else {
+				Logue::log("Failed to load extension: " . $obj->name(), Logue::WARN);
+				return false;
+			}
 		}
-		$class = get_class($obj);
-		// This is hideous
-		if(!in_array(
-			'\Phrototype\Renderer\iExtension',
-				class_implements(
-					get_class($obj)
-				))
-		) {
-			Logue::log(
-				"Failed loading $class: does not implement iExtension interface",
-				Logue::WARN
-			);
-			return false;
-		}
-
-		$name = $obj->name();
-		if($this->registerMethod(
-			$name, $obj->load(), $obj->renderer()
-		)) {
-			Logue::log("Successfully loaded renderer extension: $name", Logue::INFO);
-		}
+		return false;
 	}
 
-	public function registerMethod($name, $details, $renderer = null) {
+	public function registerMethod(
+		$name, array $details, $renderer = null
+	) {
 		if(!array_key_exists('renderer', $details)) {
 			throw new \Exception("No renderer provided for $name");
 		}
