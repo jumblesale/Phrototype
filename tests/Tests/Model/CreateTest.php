@@ -43,5 +43,10 @@ class CreateTest extends \PHPUnit_Framework_TestCase{
 			'title'	=> ['type' => 'string', 'value' => []],
 			'edition' => ['type' => 'int', 'value' => 'one']
 		]);
+
+		$this->assertEquals(
+			['title' => null, 'edition' => null],
+			$book->getProperties()
+		);
 	}
 }
