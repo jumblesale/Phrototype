@@ -5,9 +5,11 @@ namespace Phrototype\Model;
 use Phrototype\Prototype;
 
 class Model {
-	public static function create(array $prototype = array()) {
-		$args = self::processFields($prototype);
-		$obj = new Prototype($args);
+	public static function create(
+		array $fields = array(), $prototype = null
+	) {
+		$fields = self::processFields($fields);
+		$obj = Prototype::create($fields, $prototype);
 		return $obj;
 	}
 
@@ -15,6 +17,10 @@ class Model {
 		$args = [];
 		foreach ($fields as $name => $field) {
 			$value = null;
+			if(!is_array($field)) {
+				$args[$name] = $field;
+				continue;
+			}
 			if(array_key_exists('value', $field)) {
 				$value = $field['value'];
 				if(array_key_exists('type', $field)) {
@@ -36,5 +42,11 @@ class Model {
 			: null;
 	}
 
-	public function load(array $data = array()) {}
+	public static function load(array $data = array(), $prototype = null) {
+		$objects = [];
+		foreach($data as $datum) {
+			$objects[] = self::create($datum, $prototype);
+		}
+		return $objects;
+	}
 }
