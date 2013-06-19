@@ -10,7 +10,7 @@ class Prototype {
 		$this->properties = $properties;
 	}
 
-	public static function create($proto = null, $args = [], $class = null) {
+	public static function create($args = [], $proto = null, $class = null) {
 		if($class && !class_exists($class)) {
 			// Haha!
 			eval("class $class extends Phrototype\Prototype {}");
@@ -27,7 +27,7 @@ class Prototype {
 	}
 
 	public function __clone() {
-		return $self::create($this);
+		return $self::create([], $this);
 	}
 
 	public function __get($name) {

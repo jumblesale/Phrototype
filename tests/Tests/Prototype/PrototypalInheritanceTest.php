@@ -9,13 +9,13 @@ class PrototypalInheritanceTest extends \PHPUnit_Framework_TestCase {
 	public function setUp() {
 		$this->animal = Prototype::create();
 
-		$this->cat = Prototype::create($this->animal, [
+		$this->cat = Prototype::create([
 			'name' => 'Chairman Meow', 'sound' => 'puurrRRRrrRRRrr',
-		]);
+		], $this->animal);
 
-		$this->dog = Prototype::create($this->animal, [
+		$this->dog = Prototype::create([
 			'name' => 'Colonel Charles Barksmoore', 'sound' => 'woof!',
-		]);
+		], $this->animal);
 	}
 
 	public function testPrototypeIsCorrectlySet() {
