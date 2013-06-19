@@ -5,7 +5,7 @@ namespace Phrototype\Tests;
 use Phrototype\Model\Model;
 use Phrototype\Prototype;
 
-class CreateTest extends \PHPUnit_Framework_TestCase{
+class CreateTest extends \PHPUnit_Framework_TestCase {
 	public function testCreateReturnsANewPrototype() {
 		$o = Model::create([]);
 
@@ -46,6 +46,31 @@ class CreateTest extends \PHPUnit_Framework_TestCase{
 
 		$this->assertEquals(
 			['title' => null, 'edition' => null],
+			$book->getProperties()
+		);
+	}
+
+	public function testCanCreateWithoutSpecifyingAdditionalDetails() {
+		$book = Model::create(['title' => 'Don Quixote', 'author' => 'Cervantes']);
+
+		$this->assertEquals(
+			['title' => 'Don Quixote', 'author' => 'Cervantes'],
+			$book->getProperties()
+		);
+	}
+
+	public function testCanCreateFromExistingObject() {
+		$product = Model::create([
+			'id' => '1', 'price' => '3',
+		]);
+
+		$book = Model::create(
+			['id' => '2', 'title' => 'Don Quixote'],
+			$product
+		);
+
+		$this->assertEquals(
+			['id' => '2', 'price' => '3', 'title' => 'Don Quixote'],
 			$book->getProperties()
 		);
 	}
