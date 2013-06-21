@@ -7,7 +7,7 @@ use Phrototype\Prototype;
 
 class LoadTest extends \PHPUnit_Framework_TestCase {
 	public function testLoadingProducesObjectWithFieldsSetCorrectly() {
-		$book = Model::create(['title', 'author', 'price']);
+		$book = Model::create(['title' => null, 'author' => null, 'price' => null]);
 
 		// Some dystopias in descending order of quality
 		$bookshelf = [
@@ -24,11 +24,12 @@ class LoadTest extends \PHPUnit_Framework_TestCase {
 
 		foreach($dystopias as $i => $dystopia) {
 			$this->assertInstanceOf('\Phrototype\Prototype', $book);
-			$this->assertEquals(
-				$bookshelf[$i], $dystopia->getProperties()
-			);
+			foreach($bookshelf[$i] as $property => $value) {
+				$this->assertEquals(
+					$value,
+					$dystopia->getProperties()[$property]
+				);
+			}
 		}
 	}
-
-
 }

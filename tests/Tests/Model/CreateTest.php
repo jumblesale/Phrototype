@@ -15,13 +15,14 @@ class CreateTest extends \PHPUnit_Framework_TestCase {
 	public function assertCreateWithFieldsReturnsAPrototypeWithThoseFields() {
 		// We are starting a book shop ok
 		$book = Model::create([
-			'title', 'synopsis'
+			'title' => null, 'synopsis' => null
 		]);
 
-		$this->assertEquals(
-			['title', 'synopsis'],
-			array_keys($book->getProperties())
-		);
+		$properties = $book->getProperties;
+
+		foreach($properties as $name => $property) {
+			$this->assertTrue(in_array($name), array_keys($book));
+		}
 	}
 
 	public function testCanSetAPrototypeWithTypesAndNotHaveThemInTheObject() {
@@ -32,10 +33,14 @@ class CreateTest extends \PHPUnit_Framework_TestCase {
 			'edition' => ['type' => 'integer', 'value' => '1']
 		]);
 
-		$this->assertEquals(
-			['title' => 'Don Quixote', 'published' => '1605-05-21', 'edition' => '1'],
-			$book->getProperties()
-		);
+		$properties = ['title' => 'Don Quixote', 'published' => '1605-05-21', 'edition' => '1'];
+
+		foreach($properties as $name => $value) {
+			$this->assertEquals(
+				$properties[$name],
+				$book->getProperties()[$name]
+			);
+		}
 	}
 
 	public function testCreatingWithWrongTypesDropsValues() {
@@ -44,19 +49,26 @@ class CreateTest extends \PHPUnit_Framework_TestCase {
 			'edition' => ['type' => 'int', 'value' => 'one']
 		]);
 
-		$this->assertEquals(
-			['title' => null, 'edition' => null],
-			$book->getProperties()
-		);
+		$properties = ['title' => null, 'edition' => null];
+			
+		foreach($properties as $name => $value) {
+			$this->assertEquals(
+				$properties[$name],
+				$book->getProperties()[$name]
+			);
+		}
 	}
 
 	public function testCanCreateWithoutSpecifyingAdditionalDetails() {
-		$book = Model::create(['title' => 'Don Quixote', 'author' => 'Cervantes']);
+		$properties = ['title' => 'Don Quixote', 'author' => 'Cervantes'];
+		$book = Model::create($properties);
 
-		$this->assertEquals(
-			['title' => 'Don Quixote', 'author' => 'Cervantes'],
-			$book->getProperties()
-		);
+		foreach($properties as $name => $property) {
+			$this->assertEquals(
+				$properties[$name],
+				$book->getProperties()[$name]
+			);
+		}
 	}
 
 	public function testCanCreateFromExistingObject() {
@@ -69,9 +81,13 @@ class CreateTest extends \PHPUnit_Framework_TestCase {
 			$product
 		);
 
-		$this->assertEquals(
-			['id' => '2', 'price' => '3', 'title' => 'Don Quixote'],
-			$book->getProperties()
-		);
+		$properties = ['id' => '2', 'price' => '3', 'title' => 'Don Quixote'];
+
+		foreach($properties as $name => $property) {
+			$this->assertEquals(
+				$properties[$name],
+				$book->getProperties()[$name]
+			);
+		}
 	}
 }
