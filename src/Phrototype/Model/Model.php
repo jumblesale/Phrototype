@@ -9,7 +9,7 @@ class Model extends Prototype {
 	public function load(array $data = array()) {
 		$objs = [];
 		foreach($data as $datum) {
-			$objs[] = Prototype::create($data, $this, get_class($this));
+			$objs[] = Prototype::create($datum, $this, get_class($this));
 		}
 
 		return $objs;

@@ -46,7 +46,7 @@ class LoadTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(3, sizeof($bookshelf));
 
 		foreach($bookshelf as $i => $book) {
-			$this->assertContains($this->bookshelf[$i], $book->getProperties());
+			$this->assertEquals($this->bookshelf[$i], $book->getProperties());
 		}
 	}
 }

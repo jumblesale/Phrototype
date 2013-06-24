@@ -19,7 +19,13 @@ class Factory {
 		$args = [];
 		foreach ($fields as $name => $field) {
 			$value = null;
-			if(!is_array($field)) {
+			if(
+				!is_array($field)
+				|| (
+					   gettype($field) == 'object'
+					&& is_a($field, 'Phrototype\Model\Model')
+				)
+			) {
 				$args[$name] = $field;
 				continue;
 			}

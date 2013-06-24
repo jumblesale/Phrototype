@@ -90,4 +90,20 @@ class CreateTest extends \PHPUnit_Framework_TestCase {
 			);
 		}
 	}
+
+	public function testCanCreateNestedDataTypes() {
+		$author = Model\Factory::create([
+			'name' => null, 'nationality' => null,
+		]);
+		$book = Model\Factory::create([
+			'title' => null,
+			'author' => $author,
+		]);
+
+		$this->assertEquals(
+			['title' => null,
+			 'author' => $author],
+			$book->getProperties()
+		);
+	}
 }
