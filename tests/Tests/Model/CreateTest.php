@@ -2,19 +2,19 @@
 
 namespace Phrototype\Tests;
 
-use Phrototype\Model\Model;
+use Phrototype\Model;
 use Phrototype\Prototype;
 
 class CreateTest extends \PHPUnit_Framework_TestCase {
 	public function testCreateReturnsANewPrototype() {
-		$o = Model::create([]);
+		$o = Model\Factory::create([]);
 
 		$this->assertInstanceOf('\Phrototype\Prototype', $o);
 	}
 
 	public function assertCreateWithFieldsReturnsAPrototypeWithThoseFields() {
 		// We are starting a book shop ok
-		$book = Model::create([
+		$book = Model\Factory::create([
 			'title' => null, 'synopsis' => null
 		]);
 
@@ -27,7 +27,7 @@ class CreateTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCanSetAPrototypeWithTypesAndNotHaveThemInTheObject() {
 		// Start with a good book
-		$book = Model::create([
+		$book = Model\Factory::create([
 			'title'	=> ['type' => 'string', 'value' => 'Don Quixote'],
 			'published' =>['type' => 'date', 'value' => '1605-05-21'],
 			'edition' => ['type' => 'integer', 'value' => '1']
@@ -44,7 +44,7 @@ class CreateTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testCreatingWithWrongTypesDropsValues() {
-		$book = Model::create([
+		$book = Model\Factory::create([
 			'title'	=> ['type' => 'string', 'value' => []],
 			'edition' => ['type' => 'int', 'value' => 'one']
 		]);
@@ -61,7 +61,7 @@ class CreateTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCanCreateWithoutSpecifyingAdditionalDetails() {
 		$properties = ['title' => 'Don Quixote', 'author' => 'Cervantes'];
-		$book = Model::create($properties);
+		$book = Model\Factory::create($properties);
 
 		foreach($properties as $name => $property) {
 			$this->assertEquals(
@@ -72,11 +72,11 @@ class CreateTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testCanCreateFromExistingObject() {
-		$product = Model::create([
+		$product = Model\Factory::create([
 			'id' => '1', 'price' => '3',
 		]);
 
-		$book = Model::create(
+		$book = Model\Factory::create(
 			['id' => '2', 'title' => 'Don Quixote'],
 			$product
 		);
