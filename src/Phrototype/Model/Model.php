@@ -14,4 +14,8 @@ class Model extends Prototype {
 
 		return $objs;
 	}
+
+	public function fields() {
+		return ['age' => null];
+	}
 }
