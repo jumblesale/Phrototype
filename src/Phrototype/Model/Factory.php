@@ -31,11 +31,6 @@ class Factory {
 			}
 			if(array_key_exists('value', $field)) {
 				$value = $field['value'];
-				if(array_key_exists('type', $field)) {
-					$value = TypeChecker::check($field['type'], $value) ?
-						  $value
-						: null;
-				}
 			}
 			$args[$name] = $value;
 		}
