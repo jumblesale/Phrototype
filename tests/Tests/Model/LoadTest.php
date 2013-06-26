@@ -70,9 +70,14 @@ class LoadTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @depends testCanForgeASingleElement
 	 */
-	public function testCanLoadWithNestedObjects($author) {
-		$proto	= Model\Factory::create($this->book);
+	public function testCanLoadWithNestedObjects($kafka) {
+		$book = $this->book;
+		$book['author'] = $kafka;
+
+		$model = Model\Factory::create($book);
+
+		$author = $model->author;
 		
-		$this->assertTrue($author);
+		$this->assertEquals($author, $kafka);
 	}
 }
