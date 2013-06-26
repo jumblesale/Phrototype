@@ -49,4 +49,30 @@ class LoadTest extends \PHPUnit_Framework_TestCase {
 			$this->assertEquals($this->bookshelf[$i], $book->getProperties());
 		}
 	}
+
+	public function testCanForgeASingleElement() {
+		$author	= Model\Factory::create([
+			'name' => null,	'nationality' => null,
+		]);
+
+		$kafka = $author->forge([
+			'name' => 'Kafka', 'nationality' => 'czech',
+		]);
+
+		$this->assertEquals(
+			['name' => 'Kafka', 'nationality' => 'czech'],
+			$kafka->getProperties()
+		);
+
+		return $kafka;
+	}
+
+	/**
+	 * @depends testCanForgeASingleElement
+	 */
+	public function testCanLoadWithNestedObjects($author) {
+		$proto	= Model\Factory::create($this->book);
+		
+		$this->assertTrue($author);
+	}
 }
