@@ -19,7 +19,6 @@ class CreateTest extends \PHPUnit_Framework_TestCase {
 		]);
 
 		$properties = $book->getProperties();
-		echo "\n\n"; print_r($properties); echo "\n\n";
 
 		foreach($properties as $name => $property) {
 			$this->assertTrue(in_array($name, array_keys($book)));
