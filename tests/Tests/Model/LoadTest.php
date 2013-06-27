@@ -18,7 +18,6 @@ class LoadTest extends \PHPUnit_Framework_TestCase {
 		];
 	}
 
-
 	public function testLoadingProducesObjectWithFieldsSetCorrectly() {
 		$book		= Model\Factory::create($this->book);
 		$bookshelf	= $this->bookshelf;
