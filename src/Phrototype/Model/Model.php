@@ -4,9 +4,15 @@ namespace Phrototype\Model;
 
 use Phrototype\Prototype;
 // use Phrototype\Model\TypeChecker;
+use Phrototype\Writer;
 
 class Model extends Prototype {
-	public function load(array $data = array()) {
+	public function save($filename, $directory) {
+		$writer = new Writer($directory);
+		$writer->write($filename, '');
+	}
+
+	public function load($data = null) {
 		$objs = [];
 		foreach($data as $datum) {
 			$objs[] = $this->forge($datum);

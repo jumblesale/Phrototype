@@ -26,17 +26,6 @@ class WriterTest extends \PHPUnit_Framework_TestCase {
 		}
 	}
 
-	public function testSlashify() {
-		$this->assertEquals(
-			'location/',
-			Writer::slashify('location')
-		);
-		$this->assertEquals(
-			'location/',
-			Writer::slashify('location/')
-		);
-	}
-
 	public function testWriteToNewFile() {
 		$this->fixture->write('test', 'some test data');
 		$this->assertFileExists(

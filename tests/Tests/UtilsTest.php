@@ -30,4 +30,15 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
 			Utils::getFileExtension('data')
 		);
 	}
+
+	public function testSlashify() {
+		$this->assertEquals(
+			'location/',
+			Utils::slashify('location')
+		);
+		$this->assertEquals(
+			'location/',
+			Utils::slashify('location/')
+		);
+	}
 }

@@ -14,4 +14,21 @@ class Utils {
 	public static function getFileExtension($file) {
 		return pathinfo($file, PATHINFO_EXTENSION) ?: false;
 	}
+
+	public static function slashify($location) {
+		if(!$location) {
+			return;
+		}
+		if(substr($location, -1) != '/') {
+			$location .= '/';
+		}
+		return $location;
+	}
+
+	public static function getDocumentRoot() {
+		// Relies on this being three levels deep - brittle like a peanut
+		return self::slashify(
+			dirname(dirname(dirname(realpath(__FILE__))))
+		);
+	}
 }
