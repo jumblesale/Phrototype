@@ -10,4 +10,8 @@ class Utils {
 		// thanks SO!
 		return (bool)count(array_filter(array_keys($array), 'is_string'));
 	}
+
+	public static function getFileExtension($file) {
+		return pathinfo($file, PATHINFO_EXTENSION) ?: false;
+	}
 }
