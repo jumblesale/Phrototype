@@ -4,4 +4,6 @@ namespace Phrototype\Model;
 
 use Phrototype\Utils;
 
-class Storage {}
+class Storage {
+	// stub
+}

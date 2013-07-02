@@ -3,16 +3,20 @@
 namespace Phrototype\Model;
 
 use Phrototype\Prototype;
-// use Phrototype\Model\TypeChecker;
 use Phrototype\Writer;
+use Phrototype\Utils;
 
 class Model extends Prototype {
 	public function save($filename, $directory) {
-		$writer = new Writer($directory);
-		$writer->write($filename, '');
+		touch(
+			Utils::slashify(Utils::getDocumentRoot() . $directory) . $filename
+		);
 	}
 
 	public function load($data = null) {
+		if(!is_array($data)) {
+			return $data;
+		}
 		$objs = [];
 		foreach($data as $datum) {
 			$objs[] = $this->forge($datum);

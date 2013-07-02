@@ -20,7 +20,7 @@ class SaveTest extends \PHPUnit_Framework_TestCase {
 		$dog->save('charles', 'tests/tmp');
 
 		$this->assertFileExists(
-			Utils::getDocumentRoot() . 'tests/tmp/charles.json'
+			Utils::getDocumentRoot() . 'tests/tmp/charles'
 		);
 
 		return $dog;
