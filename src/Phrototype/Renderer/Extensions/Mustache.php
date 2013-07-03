@@ -14,7 +14,6 @@ class Mustache implements iExtension {
 	public function test() {return class_exists('Mustache_Engine');}
 	public function name() {return 'mustache';}
 	public function load() {return [
-		'mime'		=> 'text/html',
 		'renderer'	=> 'mustache',
 	];}
 	public function render() {

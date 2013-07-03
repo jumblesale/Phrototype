@@ -13,17 +13,14 @@ class Renderer {
 
 	private $defaultMethods = [
 		'html'	=> [
-			'mime'		=> 'text/html',
 			'renderer'	=> 'text',
 		],
 		'json'	=> [
-			'mime' 		=> 'application/json',
 			'renderer'	=> 'json',
 		],
 		'text'	=> [
-			'mime'		=> 'text/plain',
 			'renderer'	=> 'text',
-		]
+		],
 	];
 
 	private $renderers = [];
