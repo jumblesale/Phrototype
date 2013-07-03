@@ -52,6 +52,11 @@ class Renderer {
 	public function getMethods() {return $this->methods;}
 	public function getRenderers() {return $this->renderers;}
 
+	public function methodExists($method) {
+		$methods = $this->getMethods();
+		return in_array($method, array_keys($methods));
+	}
+
 	public function registerExtension($obj) {
 		if($obj = $this->extensionRegisterer->loadExtension($obj)) {
 			if($this->registerMethod(

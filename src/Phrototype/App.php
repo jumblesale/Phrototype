@@ -5,6 +5,7 @@ namespace Phrototype;
 use Phrototype\Model;
 use Phrototype\Renderer\Renderer;
 use Phrototype\Router\Router;
+use Phrototype\Writer;
 
 class App {
 	private $renderer;
@@ -62,12 +63,21 @@ class App {
 		$this->renderer->registerExtension(
 			'Phrototype\Renderer\Extensions\Mustache'
 		);
-		return $this->renderer->method('mustache')->render(
-			'<ul>{{#.}}<li>{{title}}: {{content}}</li>{{/.}}</ul>', $data
-		);
+		return $this->renderer->method($renderer)->render($view, $data);
 	}
 
-	public function view() {
-		return call_user_method_array('render', $this, func_get_args());
+	public function view($data) {
+		$pairs = [];
+		// Munge the data into key / value pairs
+		foreach($data as $datum) {
+			foreach($datum as $k => $v) {
+				array_push($pairs, ['key' => $k, 'value' => print_r($v, true)]);
+			}
+		}
+		return $this->render(
+			'mustache',
+			'<dl>{{#.}}<dt>{{key}}:</dt><dd>{{value}}</dd>{{/.}}</dl>',
+			$pairs
+		);
 	}
 }

@@ -19,7 +19,7 @@ class AppTest extends \PHPUnit_Framework_TestCase {
 
 		$app = new \Phrototype\App();
 		$app->route()->get('blog/view', function() use ($app, $data) {
-			return $app->view('mustache', $data);
+			return $app->view($data);
 		});
 		
 		echo "\n\n"; print_r($app->route()->dispatch('get', 'blog/view')); echo "\n\n";
