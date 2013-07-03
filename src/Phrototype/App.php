@@ -11,6 +11,7 @@ class App {
 	private $renderer;
 	private $router;
 	private $defaultRenderMethod;
+	private $viewReader;
 
 	/**
 	 * constructor
@@ -20,6 +21,7 @@ class App {
 	public function __construct(array $args = null) {
 		$this->renderer = new Renderer();
 		$this->router = new Router();
+		$this->viewReader = new Writer('views');
 
 		if($args) {
 			$this->defaultRenderMethod =
@@ -34,7 +36,7 @@ class App {
 		}
 	}
 
-	public function route() {
+	public function router() {
 		return $this->router;
 	}
 
@@ -70,14 +72,22 @@ class App {
 		$pairs = [];
 		// Munge the data into key / value pairs
 		foreach($data as $datum) {
+			if(gettype($datum) === 'object'
+				&& is_a($datum, '\Phrototype\Prototype')) {
+				$datum = $datum->getProperties();
+			}
 			foreach($datum as $k => $v) {
 				array_push($pairs, ['key' => $k, 'value' => print_r($v, true)]);
 			}
 		}
 		return $this->render(
 			'mustache',
-			'<dl>{{#.}}<dt>{{key}}:</dt><dd>{{value}}</dd>{{/.}}</dl>',
+			$this->viewReader->read('view.mustache'),
 			$pairs
 		);
+	}
+
+	public function add($proto) {
+		
 	}
 }
