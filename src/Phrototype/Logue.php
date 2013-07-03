@@ -3,7 +3,7 @@
 namespace Phrototype;
 
 class Logue {
-	private static $level;
+	private static $level = 5;
 
 	const OFF	= 0;
 	const FATAL	= 1;
