@@ -6,7 +6,7 @@ use Phrototype\Logue;
 
 class LogueTest extends \PHPUnit_Framework_TestCase {
 	public function testLevelIsSetByDefault() {
-		$this->assertNull(Logue::level());
+		$this->assertNotNull(Logue::level());
 	}
 
 	public function testMEssageIsLoggedIfLevelIsSameAsLogLevel() {

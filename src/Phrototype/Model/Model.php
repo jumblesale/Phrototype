@@ -3,19 +3,29 @@
 namespace Phrototype\Model;
 
 use Phrototype\Prototype;
-use Phrototype\Model\TypeChecker;
+use Phrototype\Writer;
+use Phrototype\Utils;
 
 class Model extends Prototype {
-	public function load(array $data = array()) {
+	public function save($filename, $directory) {
+		touch(
+			Utils::slashify(Utils::getDocumentRoot() . $directory) . $filename
+		);
+	}
+
+	public function load($data = null) {
+		if(!is_array($data)) {
+			return $data;
+		}
 		$objs = [];
 		foreach($data as $datum) {
-			$objs[] = Prototype::create($datum, $this, get_class($this));
+			$objs[] = $this->forge($datum);
 		}
 
 		return $objs;
 	}
 
-	public function fields() {
-		return ['age' => null];
+	public function forge(array $data = array()) {
+		return Prototype::create($data, $this, get_class($this));
 	}
 }

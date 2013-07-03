@@ -12,16 +12,29 @@ class CreateTest extends \PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('\Phrototype\Prototype', $o);
 	}
 
-	public function assertCreateWithFieldsReturnsAPrototypeWithThoseFields() {
+	public function testCreateWithArrayReturnsAPrototypeWithThoseFields() {
 		// We are starting a book shop ok
 		$book = Model\Factory::create([
-			'title' => null, 'synopsis' => null
+			'title', 'synopsis',
 		]);
 
-		$properties = $book->getProperties;
+		$properties = $book->getProperties();
 
 		foreach($properties as $name => $property) {
-			$this->assertTrue(in_array($name), array_keys($book));
+			$this->assertTrue(in_array($name, array_keys($book)));
+		}
+	}
+
+	public function testCreateWithHashReturnsAPrototypeWithThoseFields() {
+		$book = Model\Factory::create([
+			'title' => null, 'synopsis' => null,
+		]);
+		return;
+
+		$properties = $book->getProperties();
+
+		foreach($properties as $name => $property) {
+			$this->assertTrue(in_array($name, array_keys($book)));
 		}
 	}
 

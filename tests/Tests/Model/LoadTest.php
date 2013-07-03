@@ -18,7 +18,6 @@ class LoadTest extends \PHPUnit_Framework_TestCase {
 		];
 	}
 
-
 	public function testLoadingProducesObjectWithFieldsSetCorrectly() {
 		$book		= Model\Factory::create($this->book);
 		$bookshelf	= $this->bookshelf;
@@ -48,5 +47,36 @@ class LoadTest extends \PHPUnit_Framework_TestCase {
 		foreach($bookshelf as $i => $book) {
 			$this->assertEquals($this->bookshelf[$i], $book->getProperties());
 		}
+	}
+
+	public function testCanForgeASingleElement() {
+		$author	= Model\Factory::create([
+			'name' => null,	'nationality' => null,
+		]);
+
+		$kafka = $author->forge([
+			'name' => 'Kafka', 'nationality' => 'czech',
+		]);
+
+		$this->assertEquals(
+			['name' => 'Kafka', 'nationality' => 'czech'],
+			$kafka->getProperties()
+		);
+
+		return $kafka;
+	}
+
+	/**
+	 * @depends testCanForgeASingleElement
+	 */
+	public function testCanLoadWithNestedObjects($kafka) {
+		$book = $this->book;
+		$book['author'] = $kafka;
+
+		$model = Model\Factory::create($book);
+
+		$author = $model->author;
+		
+		$this->assertEquals($author, $kafka);
 	}
 }

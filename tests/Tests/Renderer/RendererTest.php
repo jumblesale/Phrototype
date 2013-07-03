@@ -12,10 +12,9 @@ class RendererTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testHtmlJsonAndTextAreAlwaysRegistered() {
-		$methods = array_keys($this->fixture->getMethods());
-		$this->assertTrue(in_array('json', $methods));
-		$this->assertTrue(in_array('text', $methods));
-		$this->assertTrue(in_array('html', $methods));
+		$this->assertTrue($this->fixture->methodExists('json'));
+		$this->assertTrue($this->fixture->methodExists('text'));
+		$this->assertTrue($this->fixture->methodExists('html'));
 	}
 
 	public function testCanRenderWithoutSettingAMethod() {

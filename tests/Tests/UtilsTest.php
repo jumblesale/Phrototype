@@ -16,4 +16,29 @@ class UtilsTest extends \PHPUnit_Framework_TestCase {
 			Utils::isHash([0 => 'this', 1 => 'is', 2 => 'an', 3 => 'array'])
 		);
 	}
+
+	public function testGetFilExtension() {
+		$this->assertEquals(
+			'json',
+			Utils::getFileExtension('data.json')
+		);
+		$this->assertEquals(
+			'json',
+			Utils::getFileExtension('data.data.json')
+		);
+		$this->assertFalse(
+			Utils::getFileExtension('data')
+		);
+	}
+
+	public function testSlashify() {
+		$this->assertEquals(
+			'location/',
+			Utils::slashify('location')
+		);
+		$this->assertEquals(
+			'location/',
+			Utils::slashify('location/')
+		);
+	}
 }

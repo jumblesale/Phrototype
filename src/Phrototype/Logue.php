@@ -3,7 +3,7 @@
 namespace Phrototype;
 
 class Logue {
-	private static $level;
+	private static $level = 5;
 
 	const OFF	= 0;
 	const FATAL	= 1;
@@ -26,7 +26,7 @@ class Logue {
 		if(self::$level === null) {self::level(5);}
 		if(self::$level >= $level) {
 			// TODO: write this to a file or something!
-			echo $message;
+			echo $message . PHP_EOL;
 			return true;
 		}
 		return false;
