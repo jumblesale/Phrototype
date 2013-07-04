@@ -9,9 +9,17 @@ class Field {
 	private $constraints = [];
 	private $messages;
 	private $required = true;
+	private $type;
+	private $options = [];
+	private $attributes = [];
 
-	public function __construct($name = null) {
+	public function __construct($name = null, $type = null) {
 		$this->name = $name;
+		$this->type = $type;
+	}
+
+	public function name() {
+		return $this->name;
 	}
 
 	public function messages() {
@@ -22,12 +30,36 @@ class Field {
 		return $this->constraints;
 	}
 
+	public function attributes(array $v = null) {
+		if($v !== null) {
+			$this->attributes = $v;
+			return $this;
+		}
+		return $this->attributes;
+	}
+
 	public function required($v = null) {
 		if($v !== null) {
 			$this->required = $v;
 			return $this;
 		}
 		return $this->required;
+	}
+
+	public function options(array $v = null) {
+		if($v !== null) {
+			$this->options = $v;
+			return $this;
+		}
+		return $this->options;
+	}
+
+	public function type($v = null) {
+		if($v) {
+			$this->type = $v;
+			return $this;
+		}
+		return $this->type;
 	}
 
 	public function constrain($name, $values = null, $message = null) {

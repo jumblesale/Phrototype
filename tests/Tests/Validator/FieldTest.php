@@ -16,6 +16,22 @@ class FieldTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
+	public function attributesTest() {
+		$field = new Field('username');
+		$field->attributes([
+				'class' => 'input-1 input-2',
+				'disabled' => 'disabled',
+				'clearlynotanattribute' => 'whatever',
+			]);
+		$this->assertEquals(
+			[
+				'class' => 'input-1 input-2',
+				'disabled' => 'disabled',
+				'clearlynotanattribute' => 'whatever',
+			]
+		);
+	}
+
 	public function testCurryingConstraint() {
 		$fn = $this->fixture->curryConstraint(
 			'length', [0, 8]
@@ -61,5 +77,13 @@ class FieldTest extends \PHPUnit_Framework_TestCase {
 	public function testRequired() {
 		$this->fixture->required(false);
 		$this->assertFalse($this->fixture->required());
+	}
+
+	public function testOptions() {
+		$this->fixture->options(['some' => 'things', 'are' => 'here']);
+		$this->assertEquals(
+			['some' => 'things', 'are' => 'here'],
+			$this->fixture->options()
+		);
 	}
 }

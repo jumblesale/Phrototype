@@ -30,11 +30,11 @@ class Validator {
 		return $this->messages;
 	}
 
-	public function field($name) {
+	public function field($name, $type = null) {
 		if($this->currentGroup) {
 			$this->groups[$this->currentGroup][] = $name;
 		}
-		$field = new Field($name);
+		$field = new Field($name, $type);
 		$this->fields[$name] = $field;
 		return $field;
 	}
@@ -57,5 +57,9 @@ class Validator {
 		}
 		$this->messages = $messages;
 		return $success;
+	}
+
+	public function html() {
+		return print_r($this->fields, 1);
 	}
 }
