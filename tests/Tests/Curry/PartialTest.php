@@ -1,6 +1,6 @@
 <?php
 
-namespace Phrototype\Tests;
+namespace Phrototype\Tests\Curry;
 
 use Phrototype\Curry\Bind;
 

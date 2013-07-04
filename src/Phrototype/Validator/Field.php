@@ -7,9 +7,14 @@ use \Phrototype\Curry;
 class Field {
 	private $name;
 	private $constraints;
+	private $messages;
 
 	public function __construct($name = null) {
 		$this->name = $name;
+	}
+
+	public function messages() {
+		return $this->messages;
 	}
 
 	public function constraints() {
@@ -17,7 +22,13 @@ class Field {
 	}
 
 	public function constrain($name, $values = null, $message = null) {
-		$this->constraints[$name] = '';
+		$this->constraints[$name]['fn'] = $this->curryConstraint(
+			$name, $values
+		);
+		if(!$message) {
+			$message = "$name constraint failed";
+		}
+		$this->constraints[$name]['message'] = $message;
 		return $this;
 	}
 
@@ -40,5 +51,25 @@ class Field {
 		);
 		
 		return $fn;
+	}
+
+	public function test($name, $value) {
+		return (bool)$this->constraints[$name]['fn']($value);
+	}
+
+	public function validate($value) {
+		$success = true;
+		$messages = [];
+		foreach(array_keys($this->constraints) as $constraint) {
+			if(!$this->test($constraint, $value)) {
+				$success = false;
+				array_push(
+					$messages,
+					$this->constraints[$constraint]['message']
+				);
+			}
+		}
+		$this->messages = $messages;
+		return $success;
 	}
 }
