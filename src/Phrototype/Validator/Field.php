@@ -6,7 +6,7 @@ use \Phrototype\Curry;
 
 class Field {
 	private $name;
-	private $constraints;
+	private $constraints = [];
 	private $messages;
 	private $required = true;
 
