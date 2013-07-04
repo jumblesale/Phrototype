@@ -57,4 +57,9 @@ class FieldTest extends \PHPUnit_Framework_TestCase {
 			$this->fixture->messages()
 		);
 	}
+
+	public function testRequired() {
+		$this->fixture->required(false);
+		$this->assertFalse($this->fixture->required());
+	}
 }

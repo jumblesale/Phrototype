@@ -8,6 +8,7 @@ class Field {
 	private $name;
 	private $constraints;
 	private $messages;
+	private $required = true;
 
 	public function __construct($name = null) {
 		$this->name = $name;
@@ -19,6 +20,14 @@ class Field {
 
 	public function constraints() {
 		return $this->constraints;
+	}
+
+	public function required($v = null) {
+		if($v !== null) {
+			$this->required = $v;
+			return $this;
+		}
+		return $this->required;
 	}
 
 	public function constrain($name, $values = null, $message = null) {
