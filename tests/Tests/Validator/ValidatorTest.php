@@ -84,6 +84,5 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 		$html = $this->fixture->html();
 		$dom = new \DOMDocument();
 		$this->assertTrue($dom->loadHTML($html));
-		print_r($html);
 	}
 }

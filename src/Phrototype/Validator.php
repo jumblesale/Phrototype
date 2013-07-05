@@ -70,6 +70,17 @@ class Validator {
 	}
 
 	public function html() {
+		$fields = $this->fields;
+		$groups = $this->groups;
+		if($groups) {
+			$fieldsets = [];
+			foreach($groups as $name => $fields) {
+				foreach($fields as $field => $v) {
+					$fieldsets[$name][] = $fields[$field];
+				}
+			}
+			$fields = $fieldsets;
+		}
 		return $this->form()->fields($this->fields)->html();
 	}
 }
