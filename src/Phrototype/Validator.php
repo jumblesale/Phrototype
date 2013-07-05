@@ -59,7 +59,5 @@ class Validator {
 		return $success;
 	}
 
-	public function html() {
-		return print_r($this->fields, 1);
-	}
+	public function html() {}
 }

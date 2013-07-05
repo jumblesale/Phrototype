@@ -3,6 +3,7 @@
 namespace Phrototype\Validator;
 
 use Phrototype\Validator\Field;
+use Phrototype\Validator\ElementsParser;
 use Phrototype\Utils;
 
 // Given a bunch of fields, make me a form!
@@ -43,8 +44,11 @@ class FormBuilder {
 	private $action;
 	private $attributes = [];
 
+	private $parser;
+
 	public function __construct(array $fields = array()) {
 		$this->fields = $fields;
+		$this->parser = new ElementsParser();
 	}
 
 	public static function create(array $fields = array()) {
@@ -172,5 +176,12 @@ class FormBuilder {
 			return 'select';
 		}
 		return 'input';
+	}
+
+	public function html(array $elements = array()) {
+		if(!$elements) {
+			$elements = [$this->form()];
+		}
+		return $this->parser->parse($elements);
 	}
 }
