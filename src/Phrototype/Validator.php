@@ -3,12 +3,22 @@
 namespace Phrototype;
 
 use Phrototype\Validator\Field;
+use Phrototype\Validator\FormBuilder;
 
 class Validator {
 	private $fields;
 	private $groups;
 	private $currentGroup;
 	private $messages;
+	private $form;
+
+	public function __construct() {
+		$this->form = new FormBuilder();
+	}
+
+	public function form() {
+		return $this->form;
+	}
 
 	public function group($name) {
 		$this->currentGroup = $name;
@@ -59,5 +69,7 @@ class Validator {
 		return $success;
 	}
 
-	public function html() {}
+	public function html() {
+		return $this->form()->fields($this->fields)->html();
+	}
 }

@@ -72,4 +72,18 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 			$validator->messages('password')
 		);
 	}
+
+	public function testHtml() {
+		$this->fixture->group('login')->field('username');
+		$this->fixture->group('login')->field('password');
+		$this->fixture->group('details')->field('name');
+		$this->fixture->group('details')->field('email');
+		$this->fixture->form()->method('post');
+		$this->fixture->form()->action('/wah-wah.exe');
+
+		$html = $this->fixture->html();
+		$dom = new \DOMDocument();
+		$this->assertTrue($dom->loadHTML($html));
+		print_r($html);
+	}
 }

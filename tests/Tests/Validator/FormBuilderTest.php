@@ -218,4 +218,72 @@ class FormBuilderTest extends \PHPUnit_Framework_TestCase {
 			$form->form()
 		);
 	}
+
+	public function testFieldsets() {
+		$fields = [
+			'login' => [
+				Field::create('username'),
+				Field::create('password'),
+			],
+			'details' => [
+				Field::create('name'),
+			]
+		];
+
+		$form = FormBuilder::create($fields)
+			->method('get')
+			->action('/submit');
+
+		$this->assertEquals(
+			[
+				'tag' => 'form',
+				'attributes' => [
+					'method' => 'get',
+					'action' => '/submit',
+				],
+				'children' => [
+					[
+						'tag' => 'fieldset',
+						'children' => [
+							[
+								'tag' => 'legend',
+								'children' => 'login'
+							],
+							[
+								'tag' => 'input',
+								'attributes' => [
+									'type' => 'text',
+									'name' => 'username'
+								]
+							],
+							[
+								'tag' => 'input',
+								'attributes' => [
+									'type' => 'password',
+									'name' => 'password'
+								]
+							],
+						]
+					],
+					[
+						'tag' => 'fieldset',
+						'children' => [
+							[
+								'tag' => 'legend',
+								'children' => 'details'
+							],
+							[
+								'tag' => 'input',
+								'attributes' => [
+									'type' => 'text',
+									'name' => 'name'
+								]
+							],
+						]
+					],
+				]
+			],
+			$form->form()
+		);
+	}
 }

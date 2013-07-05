@@ -55,6 +55,15 @@ class FormBuilder {
 		return new FormBuilder($fields);
 	}
 
+	public function fields(array $fields = null) {
+		if($fields) {
+			$this->fields = $fields;
+			$this->form();
+			return $this;
+		}
+		return $this->fields;
+	}
+
 	public function form() {
 		$this->form = $this->buildForm($this->fields);
 		return $this->form;
@@ -90,10 +99,25 @@ class FormBuilder {
 			$this->attributes(),
 			['method' => $this->method(), 'action' => $this->action()]
 		);
-		foreach($fields as $field) {
-			$form['children'][] = $this->buildElement($field);
+		if(!Utils::isHash($fields)) {
+			foreach($fields as $field) {
+				$form['children'][] = $this->buildElement($field);
+			}
+			return $form;
 		}
-
+		// Deal with fieldsets
+		foreach($fields as $name => $fieldset) {
+			$fieldsetTag = [
+				'tag' => 'fieldset',
+				'children' => [
+					['tag' => 'legend', 'children' => $name]
+				]
+			];
+			foreach($fieldset as $setChild) {
+				$fieldsetTag['children'][] = $this->buildElement($setChild);
+			}
+			$form['children'][] = $fieldsetTag;
+		}
 		return $form;
 	}
 
@@ -155,7 +179,7 @@ class FormBuilder {
 		return $return;
 	}
 
-	public function resolveType($field) {
+	public function resolveType(Field $field) {
 		if(
 			$field->type()
 			&& in_array(
