@@ -12,10 +12,17 @@ class Field {
 	private $type;
 	private $options = [];
 	private $attributes = [];
+	private $container = [];
+	private $value = null;
 
 	public function __construct($name = null, $type = null) {
 		$this->name = $name;
 		$this->type = $type;
+	}
+
+	// static factory method
+	public static function create($name = null, $type = null) {
+		return new Field($name, $type);
 	}
 
 	public function name() {
@@ -36,6 +43,14 @@ class Field {
 			return $this;
 		}
 		return $this->attributes;
+	}
+
+	public function value($v = null) {
+		if($v !== null) {
+			$this->value = $v;
+			return $this;
+		}
+		return $this->value;
 	}
 
 	public function required($v = null) {
@@ -60,6 +75,20 @@ class Field {
 			return $this;
 		}
 		return $this->type;
+	}
+
+	public function container(
+		$tag = null,
+		array $attributes = array()
+	) {
+		if(!$tag) {
+			return $this->container ?: null;
+		}
+		$this->container = [
+			'tag' => $tag,
+			'attributes' => $attributes,
+		];
+		return $this;
 	}
 
 	public function constrain($name, $values = null, $message = null) {

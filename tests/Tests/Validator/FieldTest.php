@@ -16,7 +16,7 @@ class FieldTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
-	public function attributesTest() {
+	public function testAttributes() {
 		$field = new Field('username');
 		$field->attributes([
 				'class' => 'input-1 input-2',
@@ -28,7 +28,8 @@ class FieldTest extends \PHPUnit_Framework_TestCase {
 				'class' => 'input-1 input-2',
 				'disabled' => 'disabled',
 				'clearlynotanattribute' => 'whatever',
-			]
+			],
+			$field->attributes()
 		);
 	}
 
@@ -84,6 +85,23 @@ class FieldTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(
 			['some' => 'things', 'are' => 'here'],
 			$this->fixture->options()
+		);
+	}
+
+	public function testContainer() {
+		$this->assertNull($this->fixture->container());
+		$this->fixture->container('div', ['class' => 'input-1 input-2']);
+		$this->assertEquals(
+			['tag' => 'div', 'attributes' => ['class' => 'input-1 input-2']],
+			$this->fixture->container()
+		);
+	}
+
+	public function testValue() {
+		$this->fixture->value(3);
+		$this->assertEquals(
+			3,
+			$this->fixture->value()
 		);
 	}
 }

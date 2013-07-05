@@ -3,12 +3,21 @@
 namespace Phrototype\Validator;
 
 use Phrototype\Validator\Field;
+use Phrototype\Utils;
 
 // Given a bunch of fields, make me a form!
 class FormBuilder {
 	// These are HTML elements perhaps you recognise them
 	private $types = [
-		  'checkbox'	=> ['tag' => 'checkbox']
+		  'input'		=> [
+		  	'tag' => 'input',
+		  	'attributes' => ['type' => 'text'],
+		]
+		, 'hidden'		=> [
+			'tag' => 'input',
+			'attributes' => ['type' => 'hidden']
+		]
+		, 'checkbox'	=> ['tag' => 'checkbox']
 		, 'radio'		=> ['tag' => 'radio']
 		, 'password'	=> [
 			'tag' => 'input',
@@ -28,24 +37,118 @@ class FormBuilder {
 			'attributes' => ['type' => 'email']
 		]
 	];
+	private $form = [];
+	private $fields;
+	private $method;
+	private $action;
+	private $attributes = [];
 
-	public function build(array $fields) {
-		foreach($fields as $field) {
-			$type	= $this->types[$this->resolveType($field)];
-			$tag	= $types[$type]['tag'];
-			$attributes = [];
-			if(array_key_exists('attributes', $type)) {
-				$attributes = array_merge(
-					$field->attributes(),
-					$type['attributes']
-				);
-			} else {
-				$attributes = $field->attributes();
-			}
-			$hash['attributes']	= $this->resolveAttributes($field);
-			$hash['contents']	= $this->resolveContents($field);
+	public function __construct(array $fields = array()) {
+		$this->fields = $fields;
+	}
+
+	public static function create(array $fields = array()) {
+		return new FormBuilder($fields);
+	}
+
+	public function form() {
+		$this->form = $this->buildForm($this->fields);
+		return $this->form;
+	}
+
+	public function method($method = null) {
+		if($method) {
+			$this->method = $method;
+			return $this;
 		}
-		return $hash;
+		return $this->method;
+	}
+
+	public function action($action = null) {
+		if($action) {
+			$this->action = $action;
+			return $this;
+		}
+		return $this->action;
+	}
+
+	public function attributes(array $v = null) {
+		if($v !== null) {
+			$this->attributes = $v;
+			return $this;
+		}
+		return $this->attributes;
+	}
+
+	public function buildForm(array $fields = array()) {
+		$form = ['tag' => 'form'];
+		$form['attributes'] = array_merge(
+			$this->attributes(),
+			['method' => $this->method(), 'action' => $this->action()]
+		);
+		foreach($fields as $field) {
+			$form['children'][] = $this->buildElement($field);
+		}
+
+		return $form;
+	}
+
+	public function buildElement($field) {
+		$attributes;
+		$type = $this->resolveType($field);
+		$tag = $this->types[$type]['tag'];
+		$attributes = [];
+		if(array_key_exists('attributes', $this->types[$type])) {
+			$attributes = array_merge(
+				$field->attributes(),
+				$this->types[$type]['attributes']
+			);
+		} else {
+			$attributes = $field->attributes();
+		}
+
+		$attributes['name'] = $field->name();
+		$value = $field->value();
+		$element = [
+			'tag' => $this->types[$type]['tag'],
+			'attributes' => $attributes
+		];
+
+		if('select' == $type) {
+			$children = $this->buildSelectOptions($field->options(), $value);
+			$element['children'] = $children;
+		} else {
+			if(null !== $value) {
+				$element['attributes']['value'] = $value;
+			}
+		}
+		
+		if($field->container()) {
+			$container = ['tag' => $field->container()['tag']];
+			$container['children'][] = $element;
+			if($field->container()['attributes']) {
+				$container['attributes'] = $field->container()['attributes'];
+			}
+			$element = $container;
+		}
+
+		return $element;
+	}
+
+	public function buildSelectOptions($options, $defaultValue) {
+		$return = [];
+		foreach($options as $value => $text) {
+			$hash = [
+				'tag' => 'option',
+				'attributes' => ['value' => $value],
+				'children' => $text,
+			];
+			if($defaultValue === $value) {
+				$hash['attributes']['selected'] = 'selected';
+			}
+			$return[] = $hash;
+		}
+		return $return;
 	}
 
 	public function resolveType($field) {
@@ -60,7 +163,7 @@ class FormBuilder {
 		if(
 			$field->name()
 			&& in_array(
-				$field->type(), array_keys($this->types)
+				$field->name(), array_keys($this->types)
 			)
 		) {
 			return $field->name();
