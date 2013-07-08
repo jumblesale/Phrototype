@@ -8,6 +8,7 @@ use Phrototype\Validator\Form;
 class Validator {
 	private $fields;
 	private $groups;
+	private $titles = [];
 	private $currentGroup;
 	private $messages;
 	private $form;
@@ -16,17 +17,32 @@ class Validator {
 		$this->form = new Form();
 	}
 
+	public static function create() {
+		return new Validator();
+	}
+
 	public function form() {
 		return $this->form;
 	}
 
-	public function group($name) {
+	public function group($name, $title = '') {
 		$this->currentGroup = $name;
+		if($title) {
+			$this->titles[$name] = $title;
+		}
 		return $this;
 	}
 
 	public function groups() {
 		return $this->groups;
+	}
+
+	public function getGroupTitle($name) {
+		if(array_key_exists($name, $this->titles)) {
+			return $this->titles[$name];
+		} else {
+			return $name;
+		}
 	}
 
 	public function fields() {
@@ -74,13 +90,14 @@ class Validator {
 		$groups = $this->groups;
 		if($groups) {
 			$fieldsets = [];
-			foreach($groups as $name => $fields) {
-				foreach($fields as $field => $v) {
-					$fieldsets[$name][] = $fields[$field];
+			foreach($groups as $name => $groupFields) {
+				$title = $this->getGroupTitle($name);
+				foreach($groupFields as $field => $v) {
+					$fieldsets[$title][] = $fields[$v];
 				}
 			}
 			$fields = $fieldsets;
 		}
-		return $this->form()->fields($this->fields)->html();
+		return $this->form()->html($fields);
 	}
 }

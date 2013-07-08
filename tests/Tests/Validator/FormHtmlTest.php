@@ -100,11 +100,11 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 		$form = Form::create();
 
 		$fields = [
-			'login' => [
+			'Login details' => [
 				Field::create('username'),
 				Field::create('password'),
 			],
-			'details' => [
+			'Your details' => [
 				Field::create('name'),
 				Field::create('email'),
 			]
@@ -114,6 +114,11 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 		$this->dom->loadHTML($html);
 		$login = $this->dom->getElementsByTagName('fieldset')->item(0);
 		$this->assertNotNull($login);
+		$this->assertEquals(
+			'Login details',
+			$login->getElementsByTagName('legend')
+				->item(0)->nodeValue
+		);
 		$this->assertEquals(
 			'username',
 			$login->getElementsByTagName('input')
@@ -126,6 +131,11 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 		);
 		$details = $this->dom->getElementsByTagName('fieldset')->item(1);
 		$this->assertNotNull($details);
+		$this->assertEquals(
+			'Your details',
+			$details->getElementsByTagName('legend')
+				->item(0)->nodeValue
+		);
 		$this->assertEquals(
 			'name',
 			$details->getElementsByTagName('input')
