@@ -3,7 +3,7 @@
 namespace Phrototype;
 
 use Phrototype\Validator\Field;
-use Phrototype\Validator\FormBuilder;
+use Phrototype\Validator\Form;
 
 class Validator {
 	private $fields;
@@ -13,7 +13,7 @@ class Validator {
 	private $form;
 
 	public function __construct() {
-		$this->form = new FormBuilder();
+		$this->form = new Form();
 	}
 
 	public function form() {
