@@ -4,6 +4,7 @@ namespace Phrototype\Validator;
 
 use Phrototype\Validator\FormBuilder;
 use Phrototype\Validator\Field;
+use Phrototype\Utils;
 
 class FormParser {
 	public function parse($element) {
@@ -11,20 +12,28 @@ class FormParser {
 			   gettype($element) == 'object'
 			&& is_a($element, 'Phrototype\Validator\Form')
 		) {
-			return $this->parseForm($element)->saveHtml();
+			return $this->parseForm($element);
 		}
 		if(
 			   gettype($element) == 'object'
 			&& is_a($element, 'Phrototype\Validator\Field')
 		) {
-			return $this->parseField($element)->saveHtml();
+			return $this->parseField($element);
 		}
 		if(is_array($element)) {
+			// Check if it's a fieldset
+			if(Utils::isHash($element)) {
+				return $this->parseFieldset($element);
+			}
 			$dom = new \DOMDocument();
 			foreach($element as $field) {
-				$dom->appendChild($this->parseField($field));
+				$dom->appendChild(
+					$dom->importNode(
+						$this->parseField($field)->documentElement
+					)
+				);
 			}
-			return $dom->saveHtml();
+			return $dom;
 		}
 		return false;
 	}
@@ -82,6 +91,22 @@ class FormParser {
 			}
 		}
 		$dom->appendChild($fieldNode);
+		return $dom;
+	}
+
+	public function parseFieldset($fieldset) {
+		$dom = new \DOMDocument();
+		foreach($fieldset as $name => $fields) {
+			$fieldset = $dom->createElement('fieldset');
+			$legend = $dom->createElement('legend');
+			$fieldset->appendChild($legend);
+			$legend->appendChild($dom->createTextNode($name));
+			$parsedFields = $this->parse($fields);
+			foreach($parsedFields->childNodes as $node) {
+				$fieldset->appendChild($dom->importNode($node));
+			}
+			$dom->appendChild($fieldset);
+		}
 		return $dom;
 	}
 }

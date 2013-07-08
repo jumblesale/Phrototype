@@ -138,13 +138,6 @@ class Form {
 		if(!$elements) {
 			$elements = $this->form();
 		}
-		if(is_array($elements)) {
-			$html = '';
-			array_map(function($element) use ($html) {
-				$html .= $this->parser->parse($element);
-			}, $elements);
-			return $html;
-		}
-		return $this->parser->parse($elements);
+		return $this->parser->parse($elements)->saveHtml();
 	}
 }

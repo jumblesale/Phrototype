@@ -95,4 +95,46 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 		$duck = $form->getElementsByTagName('select')->item(0);
 		$this->assertNotNull($duck);
 	}
+
+	public function testGroups() {
+		$form = Form::create();
+
+		$fields = [
+			'login' => [
+				Field::create('username'),
+				Field::create('password'),
+			],
+			'details' => [
+				Field::create('name'),
+				Field::create('email'),
+			]
+		];
+
+		$html = $form->html($fields);
+		$this->dom->loadHTML($html);
+		$login = $this->dom->getElementsByTagName('fieldset')->item(0);
+		$this->assertNotNull($login);
+		$this->assertEquals(
+			'username',
+			$login->getElementsByTagName('input')
+				->item(0)->getAttribute('name')
+		);
+		$this->assertEquals(
+			'password',
+			$login->getElementsByTagName('input')
+				->item(1)->getAttribute('name')
+		);
+		$details = $this->dom->getElementsByTagName('fieldset')->item(1);
+		$this->assertNotNull($details);
+		$this->assertEquals(
+			'name',
+			$details->getElementsByTagName('input')
+				->item(0)->getAttribute('name')
+		);
+		$this->assertEquals(
+			'email',
+			$details->getElementsByTagName('input')
+				->item(1)->getAttribute('name')
+		);
+	}
 }

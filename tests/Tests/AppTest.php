@@ -4,6 +4,7 @@ namespace Phrototype\Tests;
 
 use Phrototype;
 use Phrototype\Model;
+use Phrototype\Validator;
 
 class AppTest extends \PHPUnit_Framework_TestCase {
 	public function testAppCanProduceViewPage() {
@@ -26,5 +27,9 @@ class AppTest extends \PHPUnit_Framework_TestCase {
 		});
 		
 		$this->assertNotNull($app->router()->dispatch('get', 'blog/view'));
+	}
+
+	public function testAdd() {
+		$validator = new Validator();
 	}
 }
