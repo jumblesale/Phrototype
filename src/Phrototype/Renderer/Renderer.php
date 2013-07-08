@@ -7,7 +7,6 @@ use Phrototype\Renderer\ExtensionRegisterer;
 
 class Renderer {
 	private $method;
-	private $callback;
 	private $extensionRegisterer;
 	private $methods = [];
 
@@ -95,7 +94,7 @@ class Renderer {
 		return true;
 	}
 
-	public function method($method, $callback = null) {
+	public function method($method) {
 		if(is_callable($method)) {
 			$this->method = $method;
 			return $this;
@@ -121,10 +120,7 @@ class Renderer {
 			return call_user_func_array($this->method, func_get_args());
 		}
 		$data = func_get_args();
-		if($this->callback) {
-			$data = call_user_func_array($this->callback, func_get_args());
-		}
-		if(array_key_exists($this->method, $this->renderers)) {
+		if(array_key_exists($this->method, $this->getMethods())) {
 			$data = call_user_func_array(
 				$this->getRenderer(),
 				$data

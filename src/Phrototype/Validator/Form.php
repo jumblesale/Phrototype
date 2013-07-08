@@ -25,8 +25,7 @@ class Form {
 			'attributes' => ['type' => 'password']
 		]
 		, 'text'		=> [
-			'input',
-			'attributes' => ['type' => 'text']
+			'tag' => 'textarea',
 		]
 		, 'submit'		=> [
 			'tag' => 'input',

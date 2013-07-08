@@ -49,8 +49,8 @@ class MustacheTest extends \PHPUnit_Framework_TestCase {
 		$data = ['name' => 'Charles', 'judgement' => 'good',
 				'reason' => 'Yes he is! Oh yes he is.',];
 		$r = $renderer->method('mustache')->render(
-			'{{name}} is a {{judgement}} dog. {{reason}}',
-			$data
+			$data,
+			'{{name}} is a {{judgement}} dog. {{reason}}'
 		);
 
 		$this->assertEquals(

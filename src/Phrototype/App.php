@@ -23,6 +23,10 @@ class App {
 		$this->router = new Router();
 		$this->viewReader = new Writer('views');
 
+		$this->renderer->registerExtension(
+			'Phrototype\Renderer\Extensions\Mustache'
+		);
+
 		if($args) {
 			$this->defaultRenderMethod =
 				  array_key_exists('defaultRenderer', $args) ?
@@ -53,19 +57,16 @@ class App {
 	/**
 	 * render
 	 * @param renderer string The name of the renderer to use (json, text, etc.)
-	 * @param view mixed The view to insert into the template
 	 * @param data mixed The data to render; accepts objects
+	 * @param view mixed The view to insert into the template
 	 * @param template mixed The template to use, or the location of the template
 	 * @param callback function A post-render callback
 	 * @param method string The magic method to use if desired (view, edit, etc.)
 	 */
 	public function render(
-		$renderer, $view, $data = null, $template = null, $callback = null
+		$renderer, $data = null, $view = null, $template = null, $callback = null
 	) {
-		$this->renderer->registerExtension(
-			'Phrototype\Renderer\Extensions\Mustache'
-		);
-		return $this->renderer->method($renderer)->render($view, $data);
+		return $this->renderer->method($renderer)->render($data, $view);
 	}
 
 	public function view($data) {
@@ -82,12 +83,12 @@ class App {
 		}
 		return $this->render(
 			'mustache',
-			$this->viewReader->read('view.mustache'),
-			$pairs
+			$pairs,
+			$this->viewReader->read('view.mustache')
 		);
 	}
 
-	public function add($proto) {
-		
+	public function add($validator) {
+		return $this->render('html', $validator->html());
 	}
 }

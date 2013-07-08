@@ -17,7 +17,7 @@ class Mustache implements iExtension {
 		'renderer'	=> 'mustache',
 	];}
 	public function render() {
-		return function($tpl, $data) {
+		return function($data, $tpl) {
 			return $this->engine->render($tpl, $data);
 		};
 	}
