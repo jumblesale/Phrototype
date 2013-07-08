@@ -3,7 +3,7 @@
 namespace Phrototype\Tests;
 
 use Phrototype\Validator\Field;
-use Phrototype\Validator\FormBuilder;
+use Phrototype\Validator\Form;
 
 class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 	public function setUp() {
@@ -11,9 +11,9 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testCreateInput() {
-		$form = new FormBuilder();
-		$input = $form->buildElement(Field::create('username'));
-		$this->dom->loadHTML($form->html([$input]));
+		$form = new Form();
+		$input = Field::create('username');
+		$this->dom->loadHTML($form->html($input));
 		$input = $this->dom->getElementsByTagName('input')->item(0);
 		$this->assertNotNull($input);
 		$this->assertEquals(
@@ -27,12 +27,10 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testCreateSelect() {
-		$form = new FormBuilder();
-		$select = $form->buildElement(
-			Field::create('ducks')
-				->options(explode(' ', 'mandarin tufted runner'))
-		);
-		$html = $form->html([$select]);
+		$form = new Form();
+		$select = Field::create('ducks')
+			->options(explode(' ', 'mandarin tufted runner'));
+		$html = $form->html($select);
 		$this->dom->loadHTML($html);
 		$select = $this->dom->getElementsByTagName('select')->item(0);
 		$this->assertNotNull($select);
@@ -53,12 +51,10 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testCanCreateContainers() {
-		$form = new FormBuilder();
-		$input = $form->buildElement(
-			Field::create('username')
-				->container('div', ['class' => 'input-1'])
-		);
-		$this->dom->loadHTML($form->html([$input]));
+		$form = new Form();
+		$input = Field::create('username')
+			->container('div', ['class' => 'input-1']);
+		$this->dom->loadHTML($form->html($input));
 		$div = $this->dom->getElementsByTagName('div')->item(0);
 		$this->assertNotNull($div);
 		$this->assertEquals(
@@ -70,7 +66,7 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testCanCreateForm() {
-		$form = FormBuilder::create([
+		$form = Form::create([
 			Field::create('username'),
 			Field::create('password'),
 			Field::create('favourite duck')
