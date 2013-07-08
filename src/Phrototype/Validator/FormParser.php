@@ -44,7 +44,6 @@ class FormParser {
 			);
 		}
 		$dom->appendChild($formNode);
-		// echo $dom->saveHtml();
 		return $dom;
 	}
 
@@ -83,7 +82,6 @@ class FormParser {
 			}
 		}
 		$dom->appendChild($fieldNode);
-		//echo $dom->saveHtml();
 		return $dom;
 	}
 }
