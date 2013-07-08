@@ -20,13 +20,23 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testGroups() {
-		$this->fixture->group('login')->field('username');
+		$this->fixture->group('login', 'Login details')->field('username');
 		$this->fixture->group('login')->field('password');
-		$this->fixture->group('details')->field('name');
+		$this->fixture->group('details', 'Your details')->field('name');
 		$this->fixture->group('details')->field('email');
 
 		$login = $this->fixture->groups()['login'];
 		$details = $this->fixture->groups()['details'];
+
+		$this->assertEquals(
+			'Login details',
+			$this->fixture->getGroupTitle('login')
+		);
+
+		$this->assertEquals(
+			'Your details',
+			$this->fixture->getGroupTitle('details')
+		);
 
 		$this->assertEquals(
 			['username', 'password'],
@@ -40,7 +50,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 
 	public function testValidating() {
 		$validator = $this->fixture;
-		$validator->group('login')->field('username');
+		$validator->group('login', 'Login details')->field('username');
 		$validator->group('login')->field('password')
 				->constrain('length', [0, 8],
 					'Password must be between 0 and 8 characters long')
@@ -74,9 +84,9 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testHtml() {
-		$this->fixture->group('login')->field('username');
+		$this->fixture->group('login', 'Login details')->field('username');
 		$this->fixture->group('login')->field('password');
-		$this->fixture->group('details')->field('name');
+		$this->fixture->group('details', 'Your details')->field('name');
 		$this->fixture->group('details')->field('email');
 		$this->fixture->form()->method('post');
 		$this->fixture->form()->action('/wah-wah.exe');
