@@ -62,10 +62,6 @@ class Form {
 		return $this->fields;
 	}
 
-	public function form() {
-		return $this;
-	}
-
 	public function method($method = null) {
 		if($method) {
 			$this->method = $method;
@@ -134,9 +130,9 @@ class Form {
 	}
 
 	public function html($elements = array()) {
-		if(!$elements) {
-			$elements = $this->form();
+		if($elements) {
+			return $this->parser->parse($elements)->saveHtml();
 		}
-		return $this->parser->parse($elements)->saveHtml();
+		return $this->parser->parse($this)->saveHtml();
 	}
 }

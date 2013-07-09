@@ -14,6 +14,7 @@ class Field {
 	private $attributes = [];
 	private $container = [];
 	private $value = null;
+	private $description;
 
 	public function __construct($name = null, $type = null) {
 		$this->name = $name;
@@ -51,6 +52,14 @@ class Field {
 			return $this;
 		}
 		return $this->value;
+	}
+
+	public function description($v = '') {
+		if($v) {
+			$this->description = $v;
+			return $this;
+		}
+		return $this->description;
 	}
 
 	public function required($v = null) {

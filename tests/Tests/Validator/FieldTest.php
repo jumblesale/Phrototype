@@ -104,4 +104,12 @@ class FieldTest extends \PHPUnit_Framework_TestCase {
 			$this->fixture->value()
 		);
 	}
+
+	public function testDescription() {
+		$this->fixture->description('a field');
+		$this->assertEquals(
+			'a field',
+			$this->fixture->description()
+		);
+	}
 }

@@ -60,7 +60,7 @@ class App {
 	 * @param method string The magic method to use if desired (view, edit, etc.)
 	 */
 	public function render(
-		$renderer, $data = null, $view = null, $template = null, $callback = null
+		$renderer, $view, $data = null, $template = null, $callback = null
 	) {
 		return $this->renderer->method($renderer)->render($view, $data);
 	}
