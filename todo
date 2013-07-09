@@ -1,2 +1,4 @@
 PHP renderer
-	Renderer which unpakcs $data nad includes the requested file
+	Renderer which unpacks $data nad includes the requested file
+Remove libs
+	Lib includer to be able to report on its libs, remove them
