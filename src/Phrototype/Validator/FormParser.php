@@ -29,7 +29,8 @@ class FormParser {
 			foreach($element as $field) {
 				$dom->appendChild(
 					$dom->importNode(
-						$this->parseField($field)->documentElement
+						$this->parseField($field)->documentElement,
+						true
 					)
 				);
 			}
@@ -46,14 +47,23 @@ class FormParser {
 		foreach($form->attributes() as $name => $value) {
 			$formNode->setAttribute($name, $value);
 		}
-		foreach($form->fields() as $field) {
-			if($field->description()) {
-				$label = $dom->createElement('label');
-				$label->setAttribute('for', $field->name());
-				$label->appendChild(
-					$dom->createTextNode($field->description())
+		$fields = $form->fields();
+		if(Utils::isHash($fields)) {
+			$fieldsets = $this->parse($fields);
+			foreach($fieldsets->childNodes as $fieldset) {
+				$formNode->appendChild(
+					$dom->importNode($fieldset, true)
 				);
-				$formNode->appendChild($label);
+			}
+			$dom->appendChild($formNode);
+			return $dom;
+		}
+		foreach($form->fields() as $name => $field) {
+			$label = $this->parseLabel($field);
+			if($label) {
+				$formNode->appendChild(
+					$dom->importNode($label, true)
+				);
 			}
 			$fieldNode = $this->parseField($field);
 			$formNode->appendChild(
@@ -109,12 +119,34 @@ class FormParser {
 			$legend = $dom->createElement('legend');
 			$fieldset->appendChild($legend);
 			$legend->appendChild($dom->createTextNode($name));
-			$parsedFields = $this->parse($fields);
-			foreach($parsedFields->childNodes as $node) {
-				$fieldset->appendChild($dom->importNode($node));
+			foreach($fields as $field) {
+				$label = $this->parseLabel($field);
+				if($label) {
+					$fieldset->appendChild(
+						$dom->importNode($label, true)
+					);
+				}
+				$parsedField = $this->parseField($field);
+				$fieldset->appendChild(
+					$dom->importNode($parsedField->documentElement, true)
+				);
 			}
 			$dom->appendChild($fieldset);
 		}
 		return $dom;
+	}
+
+	public function parseLabel($field) {
+		$dom = new \DOMDocument();
+		$description = $field->description();
+		if($description) {
+			$label = $dom->createElement('label');
+			$label->setAttribute('for', $field->name());
+			$label->appendChild(
+				$dom->createTextNode($description)
+			);
+			return $label;
+		}
+		return false;
 	}
 }

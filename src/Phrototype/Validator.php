@@ -96,8 +96,8 @@ class Validator {
 					$fieldsets[$title][] = $fields[$v];
 				}
 			}
-			$fields = $fieldsets;
+			$this->form->fields($fieldsets);
 		}
-		return $this->form()->html($fields);
+		return $this->form()->html();
 	}
 }
