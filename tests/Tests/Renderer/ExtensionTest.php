@@ -12,7 +12,6 @@ class ExtensionTest extends \PHPUnit_Framework_TestCase {
 
 	public function testRegisterMethod() {
 		$method = [
-			'mime'		=> 'text/plain',
 			'renderer'	=> 'json'
 		];
 
@@ -34,7 +33,6 @@ class ExtensionTest extends \PHPUnit_Framework_TestCase {
 
 	public function testRegisterMethodWithCustomRenderer() {
 		$method = [
-			'mime'		=> 'text/plain',
 			'renderer'	=> 'dog'
 		];
 
@@ -49,5 +47,11 @@ class ExtensionTest extends \PHPUnit_Framework_TestCase {
 		);
 
 		$this->assertEquals('pug is the best dog', $r);
+	}
+
+	public function testAutoLoadFailsWithInvalidMethod() {
+		$this->assertFalse(
+			$this->renderer->method('notamethod')
+		);
 	}
 }

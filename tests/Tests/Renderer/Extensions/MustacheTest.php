@@ -29,7 +29,7 @@ class MustacheTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertTrue(
 			$renderer->registerExtension(
-				'Phrototype\Renderer\Extensions\Mustache'
+				'mustache'
 			)
 		);
 		$this->assertTrue(
@@ -57,5 +57,16 @@ class MustacheTest extends \PHPUnit_Framework_TestCase {
 			'Charles is a good dog. Yes he is! Oh yes he is.',
 			$r
 		);
+	}
+
+	public function testAutoLoad() {
+		$renderer = new Renderer();
+
+		$r = $renderer->method('mustache')->render(
+			'{{food}} tastes good.',
+			['food' => 'pie']
+		);
+
+		$this->assertEquals('pie tastes good.', $r);
 	}
 }

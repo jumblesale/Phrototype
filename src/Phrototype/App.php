@@ -28,10 +28,10 @@ class App {
 				  array_key_exists('defaultRenderer', $args) ?
 				  $args['defaultRenderer']
 				: 'mustache';
-			// If the method isn't register, load it up!
+			// If the method isn't registered, load it up!
 			$method = $this->defaultRenderMethod;
 			if(!$this->renderer->methodExists($method)) {
-				$this->renderer->registerExtension($this->$method);
+				$this->renderer->registerExtension($this->method);
 			}
 		}
 	}
@@ -53,18 +53,15 @@ class App {
 	/**
 	 * render
 	 * @param renderer string The name of the renderer to use (json, text, etc.)
-	 * @param view mixed The view to insert into the template
 	 * @param data mixed The data to render; accepts objects
+	 * @param view mixed The view to insert into the template
 	 * @param template mixed The template to use, or the location of the template
 	 * @param callback function A post-render callback
 	 * @param method string The magic method to use if desired (view, edit, etc.)
 	 */
 	public function render(
-		$renderer, $view, $data = null, $template = null, $callback = null
+		$renderer, $data = null, $view = null, $template = null, $callback = null
 	) {
-		$this->renderer->registerExtension(
-			'Phrototype\Renderer\Extensions\Mustache'
-		);
 		return $this->renderer->method($renderer)->render($view, $data);
 	}
 
@@ -87,7 +84,7 @@ class App {
 		);
 	}
 
-	public function add($proto) {
-		
+	public function add($validator) {
+		return $this->render('html', $validator->html());
 	}
 }

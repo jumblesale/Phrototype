@@ -7,9 +7,12 @@ use Phrototype\Renderer\ExtensionRegisterer;
 
 class Renderer {
 	private $method;
-	private $callback;
 	private $extensionRegisterer;
 	private $methods = [];
+
+	private $template;
+	private $templateData = [];
+	private $contentKey = 'content';
 
 	private $defaultMethods = [
 		'html'	=> [
@@ -35,6 +38,23 @@ class Renderer {
 	public function __construct() {
 		$this->registerDefaultMethods();
 		$this->extensionRegisterer = new ExtensionRegisterer();
+	}
+
+	public function template($t = null, $v = null) {
+		if($t) {
+			$this->template = $t;
+			$this->templateData = $v;
+			return $this;
+		}
+		return $this->template;
+	}
+
+	public function contentKey($v = null) {
+		if($v) {
+			$this->contentKey = $v;
+			return $this;
+		}
+		return $this->contentKey;
 	}
 
 	public function registerDefaultMethods() {
@@ -95,7 +115,7 @@ class Renderer {
 		return true;
 	}
 
-	public function method($method, $callback = null) {
+	public function method($method) {
 		if(is_callable($method)) {
 			$this->method = $method;
 			return $this;
@@ -103,7 +123,12 @@ class Renderer {
 		if(array_key_exists($method, $this->methods)) {
 			$this->method = $method;
 		} else {
-			throw new \Exception("Unrecognised rendering method: $method");
+			// Try to autoload the method
+			if(!$this->registerExtension($method)) {
+				return false;
+			} else {
+				$this->method = $method;
+			}
 		}
 		return $this;
 	}
@@ -113,23 +138,39 @@ class Renderer {
 		return $this->renderers[$methodDetails['renderer']];
 	}
 
-	public function render($args = null) {
+	private function __render($args) {
+		// No render has been passed, just dump the data
 		if(!$this->method) {
 			return $args;
 		}
+		// The method is an anonymous function so we can just call that
 		if(is_callable($this->method)) {
 			return call_user_func_array($this->method, func_get_args());
 		}
 		$data = func_get_args();
-		if($this->callback) {
-			$data = call_user_func_array($this->callback, func_get_args());
-		}
-		if(array_key_exists($this->method, $this->renderers)) {
+		// A method has been set and it's a stored renderer
+		if(array_key_exists($this->method, $this->getMethods())) {
 			$data = call_user_func_array(
 				$this->getRenderer(),
 				$data
 			);
 		}
 		return $data;
+	}
+
+	public function render($args) {
+		$args = func_get_args();
+		if($this->template()) {
+			$content = call_user_func_array([$this, '__render'], $args);
+			$templateArgs = array_merge(
+				$this->templateData,
+				[$this->contentKey() => $content]
+			);
+			return $this->__render(
+				$this->template(),
+				$templateArgs
+			);
+		}
+		return call_user_func_array([$this, '__render'], $args);
 	}
 }

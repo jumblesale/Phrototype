@@ -28,8 +28,4 @@ class AppTest extends \PHPUnit_Framework_TestCase {
 		
 		$this->assertNotNull($app->router()->dispatch('get', 'blog/view'));
 	}
-
-	public function testAdd() {
-		$validator = new Validator();
-	}
 }

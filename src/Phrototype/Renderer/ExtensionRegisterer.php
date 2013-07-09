@@ -12,7 +12,16 @@ class ExtensionRegisterer {
 
 	public function loadExtension($obj) {
 		if(gettype($obj) === 'string') {
-			$obj = new $obj();
+			$class = '\Phrototype\Renderer\Extensions\\' . ucfirst($obj);
+			if(class_exists($class)) {
+				$obj = new $class();
+			} else {
+				Logue::log(
+					"Failed loading $class: cannot find extension",
+					Logue::WARN
+				);
+				return false;
+			}
 		}
 		$class = get_class($obj);
 		// This is hideous
