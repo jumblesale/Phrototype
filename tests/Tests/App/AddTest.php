@@ -16,6 +16,8 @@ class AppTest extends \PHPUnit_Framework_TestCase {
 		$validator->group('author', 'Author details')->field('name');
 		$validator->group('author', 'Author details')->field('email');
 
-		$this->assertNotNull($app->add($validator));
+		$add = $app->add($validator);
+
+		$this->assertNotNull($add);
 	}
 }

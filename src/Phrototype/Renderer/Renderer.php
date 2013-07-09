@@ -102,7 +102,12 @@ class Renderer {
 		if(array_key_exists($method, $this->methods)) {
 			$this->method = $method;
 		} else {
-			throw new \Exception("Unrecognised rendering method: $method");
+			// Try to autoload the method
+			if(!$this->registerExtension($method)) {
+				return false;
+			} else {
+				$this->method = $method;
+			}
 		}
 		return $this;
 	}
@@ -113,13 +118,16 @@ class Renderer {
 	}
 
 	public function render($args = null) {
+		// No render has been passed, just dump the data
 		if(!$this->method) {
 			return $args;
 		}
+		// The method is an anonymous function so we can just call that
 		if(is_callable($this->method)) {
 			return call_user_func_array($this->method, func_get_args());
 		}
 		$data = func_get_args();
+		// A method has been set and it's a stored renderer
 		if(array_key_exists($this->method, $this->getMethods())) {
 			$data = call_user_func_array(
 				$this->getRenderer(),

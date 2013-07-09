@@ -23,19 +23,15 @@ class App {
 		$this->router = new Router();
 		$this->viewReader = new Writer('views');
 
-		$this->renderer->registerExtension(
-			'Phrototype\Renderer\Extensions\Mustache'
-		);
-
 		if($args) {
 			$this->defaultRenderMethod =
 				  array_key_exists('defaultRenderer', $args) ?
 				  $args['defaultRenderer']
 				: 'mustache';
-			// If the method isn't register, load it up!
+			// If the method isn't registered, load it up!
 			$method = $this->defaultRenderMethod;
 			if(!$this->renderer->methodExists($method)) {
-				$this->renderer->registerExtension($this->$method);
+				$this->renderer->registerExtension($this->method);
 			}
 		}
 	}
