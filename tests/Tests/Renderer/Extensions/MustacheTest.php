@@ -49,8 +49,8 @@ class MustacheTest extends \PHPUnit_Framework_TestCase {
 		$data = ['name' => 'Charles', 'judgement' => 'good',
 				'reason' => 'Yes he is! Oh yes he is.',];
 		$r = $renderer->method('mustache')->render(
-			$data,
-			'{{name}} is a {{judgement}} dog. {{reason}}'
+			'{{name}} is a {{judgement}} dog. {{reason}}',
+			$data
 		);
 
 		$this->assertEquals(
@@ -63,8 +63,8 @@ class MustacheTest extends \PHPUnit_Framework_TestCase {
 		$renderer = new Renderer();
 
 		$r = $renderer->method('mustache')->render(
-			['food' => 'pie'],
-			'{{food}} tastes good.'
+			'{{food}} tastes good.',
+			['food' => 'pie']
 		);
 
 		$this->assertEquals('pie tastes good.', $r);

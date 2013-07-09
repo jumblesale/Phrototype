@@ -62,7 +62,7 @@ class App {
 	public function render(
 		$renderer, $data = null, $view = null, $template = null, $callback = null
 	) {
-		return $this->renderer->method($renderer)->render($data, $view);
+		return $this->renderer->method($renderer)->render($view, $data);
 	}
 
 	public function view($data) {
@@ -79,8 +79,8 @@ class App {
 		}
 		return $this->render(
 			'mustache',
-			$pairs,
-			$this->viewReader->read('view.mustache')
+			$this->viewReader->read('view.mustache'),
+			$pairs
 		);
 	}
 
