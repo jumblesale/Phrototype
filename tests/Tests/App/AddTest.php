@@ -6,7 +6,7 @@ use Phrototype;
 use Phrototype\Model;
 use Phrototype\Validator;
 
-class AppTest extends \PHPUnit_Framework_TestCase {
+class AddTest extends \PHPUnit_Framework_TestCase {
 	public function testAdd() {
 		$app = new \Phrototype\App();
 

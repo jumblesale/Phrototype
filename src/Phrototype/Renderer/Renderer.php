@@ -10,6 +10,10 @@ class Renderer {
 	private $extensionRegisterer;
 	private $methods = [];
 
+	private $template;
+	private $templateData = [];
+	private $contentKey = 'content';
+
 	private $defaultMethods = [
 		'html'	=> [
 			'renderer'	=> 'text',
@@ -34,6 +38,23 @@ class Renderer {
 	public function __construct() {
 		$this->registerDefaultMethods();
 		$this->extensionRegisterer = new ExtensionRegisterer();
+	}
+
+	public function template($t = null, $v = null) {
+		if($t) {
+			$this->template = $t;
+			$this->templateData = $v;
+			return $this;
+		}
+		return $this->template;
+	}
+
+	public function contentKey($v = null) {
+		if($v) {
+			$this->contentKey = $v;
+			return $this;
+		}
+		return $this->contentKey;
 	}
 
 	public function registerDefaultMethods() {
@@ -117,7 +138,7 @@ class Renderer {
 		return $this->renderers[$methodDetails['renderer']];
 	}
 
-	public function render($args = null) {
+	private function __render($args) {
 		// No render has been passed, just dump the data
 		if(!$this->method) {
 			return $args;
@@ -135,5 +156,21 @@ class Renderer {
 			);
 		}
 		return $data;
+	}
+
+	public function render($args) {
+		$args = func_get_args();
+		if($this->template()) {
+			$content = call_user_func_array([$this, '__render'], $args);
+			$templateArgs = array_merge(
+				$this->templateData,
+				[$this->contentKey() => $content]
+			);
+			return $this->__render(
+				$this->template(),
+				$templateArgs
+			);
+		}
+		return call_user_func_array([$this, '__render'], $args);
 	}
 }
