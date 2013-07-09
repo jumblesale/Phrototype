@@ -147,4 +147,25 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 				->item(1)->getAttribute('name')
 		);
 	}
+
+	public function testLabels() {
+		$form = Form::create([
+			Field::create('username')->description('Username:'),
+		])
+			->method('post')
+			->action('/submit.pl');
+
+		$this->dom->loadHTML($form->html());
+
+		$label = $this->dom->getElementsByTagName('label')->item(0);
+		$this->assertNotNull($label);
+		$this->assertEquals(
+			'Username:',
+			$label->nodeValue
+		);
+		$this->assertEquals(
+			'username',
+			$label->getAttribute('for')
+		);
+	}
 }

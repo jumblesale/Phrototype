@@ -25,7 +25,9 @@ class AppTest extends \PHPUnit_Framework_TestCase {
 		$app->router()->get('blog/view', function() use ($app, $data) {
 			return $app->view($data);
 		});
+
+		$r = $app->router()->dispatch('get', 'blog/view');
 		
-		$this->assertNotNull($app->router()->dispatch('get', 'blog/view'));
+		$this->assertNotNull($r);
 	}
 }

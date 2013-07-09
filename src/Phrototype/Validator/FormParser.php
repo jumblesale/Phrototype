@@ -47,6 +47,14 @@ class FormParser {
 			$formNode->setAttribute($name, $value);
 		}
 		foreach($form->fields() as $field) {
+			if($field->description()) {
+				$label = $dom->createElement('label');
+				$label->setAttribute('for', $field->name());
+				$label->appendChild(
+					$dom->createTextNode($field->description())
+				);
+				$formNode->appendChild($label);
+			}
 			$fieldNode = $this->parseField($field);
 			$formNode->appendChild(
 				$dom->importNode($fieldNode->documentElement, true)
