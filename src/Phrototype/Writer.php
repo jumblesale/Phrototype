@@ -5,8 +5,7 @@ namespace Phrototype;
 class Writer {
 	private $baseDir;
 	public function __construct($baseDir = null) {
-		$baseDir = Utils::slashify($baseDir);
-		$this->baseDir = Utils::getDocumentRoot() . '/' . $baseDir;
+		$this->baseDir = Utils::slashify(Utils::getDocumentRoot()). $baseDir;
 	}
 
 	public function getBaseDir() {
@@ -14,7 +13,7 @@ class Writer {
 	}
 
 	public function write($location, $data = null) {
-		$location = $this->baseDir . $location;
+		$location = Utils::slashify($this->baseDir) . $location;
 		if(!is_writable(dirname($location))) {
 			throw new \Exception("Could not write to $location");
 		}
@@ -25,9 +24,13 @@ class Writer {
 		return file_put_contents($location, $data, $flags);
 	}
 
-	public function read($location) {
+	public function read($location = null) {
+		$location = $location ?
+			  $this->baseDir . $location
+			  // strip trailing slash
+			: $this->baseDir;
 		// Maybe add support for reading as arrays?
-		return file_get_contents($this->baseDir . $location);
+		return file_get_contents($location);
 	}
 
 	public function purge($location = null) {

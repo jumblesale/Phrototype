@@ -4,6 +4,7 @@ namespace Phrototype\Model;
 
 use Phrototype\Prototype;
 use Phrototype\Utils;
+use Phrototype\Writer;
 
 class Factory {
 	public static function create(
@@ -22,8 +23,13 @@ class Factory {
 		return $obj;
 	}
 
-	public static function load(array $data = array(), $prototype = null) {
+	public static function load($data = array(), $prototype = null) {
 		$objects = [];
+		if(is_string($data)) {
+			$writer = new Writer($data);
+			// Assume json for now
+			$data = json_decode($writer->read(), true);
+		}
 		foreach($data as $datum) {
 			$objects[] = self::create($datum, $prototype);
 		}

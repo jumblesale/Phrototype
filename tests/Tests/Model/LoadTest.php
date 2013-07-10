@@ -79,4 +79,23 @@ class LoadTest extends \PHPUnit_Framework_TestCase {
 		
 		$this->assertEquals($author, $kafka);
 	}
+
+	public function testCanLoadFromLocation() {
+		$json = json_encode($this->bookshelf);
+
+		$writer = new \Phrototype\Writer('tests/tmp');
+
+		// Empty the file
+		$writer->write('books.json', '');
+		$writer->write('books.json', $json);
+
+		$loadedBooks = Model\Factory::load('tests/tmp/books.json');
+
+		$writer->purge();
+
+		$this->assertEquals(
+			Model\Factory::load($this->bookshelf),
+			$loadedBooks
+		);
+	}
 }
