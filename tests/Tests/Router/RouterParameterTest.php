@@ -2,7 +2,7 @@
 
 namespace Phrototype\Tests\Prototype;
 
-use Phrototype\Router\Router;
+use Phrototype\Router;
 
 class RouterParameterTest extends \PHPUnit_Framework_TestCase {
 	public function setUp() {

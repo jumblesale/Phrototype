@@ -3,7 +3,7 @@
 namespace Phrototype\Tests\Renderer;
 
 use Phrototype\Renderer\iExtension;
-use Phrototype\Renderer\Renderer;
+use Phrototype\Renderer;
 
 class ExtensionTest extends \PHPUnit_Framework_TestCase {
 	public function setUp() {

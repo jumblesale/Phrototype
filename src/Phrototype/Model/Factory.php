@@ -3,7 +3,6 @@
 namespace Phrototype\Model;
 
 use Phrototype\Prototype;
-// use Phrototype\Model\TypeChecker;
 use Phrototype\Utils;
 
 class Factory {
@@ -18,7 +17,7 @@ class Factory {
 			$fields = $hash;
 		}
 		$obj = Prototype::create(
-			$fields, $prototype, 'Phrototype\Model\Model'
+			$fields, $prototype, 'Phrototype\Model'
 		);
 		return $obj;
 	}

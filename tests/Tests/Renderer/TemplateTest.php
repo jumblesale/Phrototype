@@ -2,7 +2,7 @@
 
 namespace Phrototype\Tests\Renderer;
 
-use Phrototype\Renderer\Renderer;
+use Phrototype\Renderer;
 
 class TemplateTest extends \PHPUnit_Framework_TestCase {
 	public function setUp() {

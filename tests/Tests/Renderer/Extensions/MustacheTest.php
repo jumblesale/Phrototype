@@ -3,7 +3,7 @@
 namespace Phrototype\Tests\Renderer;
 
 use Phrototype\Renderer\Extensions\Mustache;
-use Phrototype\Renderer\Renderer;
+use Phrototype\Renderer;
 
 class MustacheTest extends \PHPUnit_Framework_TestCase {
 	public function setUp() {

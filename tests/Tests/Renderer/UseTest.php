@@ -3,7 +3,7 @@
 namespace Phrototype\Tests\Renderer;
 
 use Phrototype\Renderer\LibIncluder;
-use Phrototype\Renderer\Renderer;
+use Phrototype\Renderer;
 
 class UseTest extends \PHPUnit_Framework_TestCase {
 	public function testImportingCssLib() {

@@ -2,7 +2,7 @@
 
 namespace Phrototype\Tests\Renderer;
 
-use Phrototype\Renderer\Renderer;
+use Phrototype\Renderer;
 
 class RendererTest extends \PHPUnit_Framework_TestCase {
 	private static $contacts;
