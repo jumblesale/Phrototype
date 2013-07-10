@@ -40,6 +40,7 @@ class Form {
 	private $form = [];
 	private $fields = [];
 	private $submit;
+	private $submitAttributes;
 	private $method;
 	private $action;
 	private $attributes = [];
@@ -79,9 +80,10 @@ class Form {
 		return $this->action;
 	}
 
-	public function submit($v = null) {
+	public function submit($v = null, $attr = null) {
 		if($v !== null) {
 			$this->submit = $v;
+			$this->submitAttributes = $attr;
 			return $this;
 		}
 		return $this->submit;
@@ -93,6 +95,10 @@ class Form {
 			return $this;
 		}
 		return $this->attributes;
+	}
+
+	public function submitAttributes() {
+		return $this->submitAttributes;
 	}
 
 	public function buildSelectOptions($options, $defaultValue) {

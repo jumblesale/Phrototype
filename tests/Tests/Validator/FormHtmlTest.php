@@ -191,14 +191,18 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 
 		$form = Form::create([
 			Field::create('username')->description('Username:'),
-		])->submit('send it hence');
-		
+		])->submit('send it hence', ['class' => 'pink-button']);
+
 		$this->dom->loadHTML($form->html());
 
 		$submit = $this->dom->getElementsByTagName('input')->item(1);
 		$this->assertEquals(
 			'send it hence',
 			$submit->getAttribute('value')
+		);
+		$this->assertEquals(
+			'pink-button',
+			$submit->getAttribute('class')
 		);
 	}
 }

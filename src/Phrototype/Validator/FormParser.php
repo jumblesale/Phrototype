@@ -55,6 +55,9 @@ class FormParser {
 					$dom->importNode($fieldset, true)
 				);
 			}
+			$formNode->appendChild(
+				$dom->importNode($this->parseSubmit($form))
+			);
 			$dom->appendChild($formNode);
 			return $dom;
 		}
@@ -70,13 +73,23 @@ class FormParser {
 				$dom->importNode($fieldNode->documentElement, true)
 			);
 		}
+		$formNode->appendChild($dom->importNode($this->parseSubmit($form)));
+		$dom->appendChild($formNode);
+		return $dom;
+	}
+
+	public function parseSubmit($form) {
+		$dom = new \DOMDocument();
 		$submit = $dom->createElement('input');
 		$submit->setAttribute('type', 'submit');
 		$value = $form->submit() ?: 'Submit';
 		$submit->setAttribute('value', $value);
-		$formNode->appendChild($submit);
-		$dom->appendChild($formNode);
-		return $dom;
+		if($form->submitAttributes()) {
+			foreach($form->submitAttributes() as $name => $value) {
+				$submit->setAttribute($name, $value);
+			}
+		}
+		return $submit;
 	}
 
 	public function parseField($field) {
