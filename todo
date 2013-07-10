@@ -10,3 +10,6 @@ Renderer
 Models
 	Load from file
 	Save to file
+Exceptions
+	Loading from JSON
+	Rendering in extension

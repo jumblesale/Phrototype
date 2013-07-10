@@ -50,6 +50,10 @@ class App {
 			: $this->defaultRenderMethod;
 	}
 
+	public function import($libs) {
+		return $this->renderer->importer()->import($libs);
+	}
+
 	/**
 	 * render
 	 * @param renderer string The name of the renderer to use (json, text, etc.)
