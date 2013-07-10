@@ -6,7 +6,7 @@ Form
 	Support for arbitrary markup anywhere in the form
 Renderer
 	Twig renderer
-	Markdown renderer
+	Markdown renderer - https://packagist.org/packages/dflydev/markdown
 Models
 	Load from file
 	Save to file
