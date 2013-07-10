@@ -19,7 +19,7 @@ class UseTest extends \PHPUnit_Framework_TestCase {
 		$css = new LibIncluder();
 		$link = $css->import('jquery');
 		$this->assertEquals(
-			'<script language="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>',
+			'<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>',
 			$link
 		);
 	}
@@ -63,7 +63,7 @@ class UseTest extends \PHPUnit_Framework_TestCase {
 			</html>', [
 				'css' => $renderer->importer()->import('normalize'),
 				'js' => $renderer->importer()->import('jquery'),
-				'script' => '<script language="text/javascript">
+				'script' => '<script type="text/javascript">
 						$("#message").hide().slideDown("slow");
 					</script>'
 		]);

@@ -44,6 +44,10 @@ class Renderer {
 		$this->importer = new LibIncluder();
 	}
 
+	public static function create() {
+		return new Renderer();
+	}
+
 	public function template($t = null, $v = null) {
 		if($t) {
 			$this->template = $t;

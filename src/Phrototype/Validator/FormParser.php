@@ -70,6 +70,11 @@ class FormParser {
 				$dom->importNode($fieldNode->documentElement, true)
 			);
 		}
+		$submit = $dom->createElement('input');
+		$submit->setAttribute('type', 'submit');
+		$value = $form->submit() ?: 'Submit';
+		$submit->setAttribute('value', $value);
+		$formNode->appendChild($submit);
 		$dom->appendChild($formNode);
 		return $dom;
 	}

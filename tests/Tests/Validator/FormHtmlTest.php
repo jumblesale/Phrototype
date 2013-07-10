@@ -168,4 +168,37 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 			$label->getAttribute('for')
 		);
 	}
+
+	public function testSubmit() {
+		$form = Form::create([
+			Field::create('username')->description('Username:'),
+		]);
+
+		$this->assertNull($form->submit());
+
+		$this->dom->loadHTML($form->html());
+
+		$submit = $this->dom->getElementsByTagName('input')->item(1);
+		$this->assertNotNull($submit);
+		$this->assertEquals(
+			'submit',
+			$submit->getAttribute('type')
+		);
+		$this->assertEquals(
+			'Submit',
+			$submit->getAttribute('value')
+		);
+
+		$form = Form::create([
+			Field::create('username')->description('Username:'),
+		])->submit('send it hence');
+		
+		$this->dom->loadHTML($form->html());
+
+		$submit = $this->dom->getElementsByTagName('input')->item(1);
+		$this->assertEquals(
+			'send it hence',
+			$submit->getAttribute('value')
+		);
+	}
 }

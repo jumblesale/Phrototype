@@ -38,7 +38,8 @@ class Form {
 		]
 	];
 	private $form = [];
-	private $fields;
+	private $fields = [];
+	private $submit;
 	private $method;
 	private $action;
 	private $attributes = [];
@@ -76,6 +77,14 @@ class Form {
 			return $this;
 		}
 		return $this->action;
+	}
+
+	public function submit($v = null) {
+		if($v !== null) {
+			$this->submit = $v;
+			return $this;
+		}
+		return $this->submit;
 	}
 
 	public function attributes(array $v = null) {

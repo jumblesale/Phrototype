@@ -10,6 +10,10 @@ class LibIncluder {
 			'url' => 'http://yui.yahooapis.com/3.10.3/build/cssnormalize/cssnormalize-min.css',
 			'type' => 'css',
 		],
+		'pure' => [
+			'url' => 'http://yui.yahooapis.com/pure/0.2.0/pure-min.css',
+			'type' => 'css',
+		],
 		'jquery' => [
 			'url' => 'http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js',
 			'type' => 'js',
