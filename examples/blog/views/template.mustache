@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Blog Layout Example &ndash; Pure</title>
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.2.0/pure-min.css">
+<link rel="stylesheet" href="http://purecss.io/combo/1.3.10?/css/layouts/blog.css">
+</head>
+<body>
+
+<div class="pure-g-r" id="layout">
+	<div class="sidebar pure-u">
+		<header class="header pure-u-1">
+			<hgroup>
+				<h1 class="brand-title">A Sample Blog</h1>
+				<h2 class="brand-tagline">Creating a blog layout using Pure</h2>
+			</hgroup>
+
+			<nav class="nav">
+				<ul class="nav-list">
+					<li class="nav-item">
+						<a class="pure-button" href="http://purecss.io">Pure</a>
+					</li>
+					<li class="nav-item">
+						<a class="pure-button" href="http://yuilibrary.com">YUI Library</a>
+					</li>
+				</ul>
+			</nav>
+		</header>
+	</div>
+
+	<div class="content pure-u-1">
+		<!-- A wrapper for all the blog posts -->
+		<div class="posts pure-g">
+			<!-- A single blog post -->
+			{{#repo}}
+			<section class="post pure-u-1">
+				<header class="post-header">
+					<h2 class="post-title pure-u-1">{{title}}</h2>
+
+					<p class="post-meta pure-u-1">
+						By <a href="#" class="post-author">{{author}}</a>
+						<!-- under <a class="post-category post-category-design" href="#">CSS</a> <a class="post-category post-category-pure" href="#">Pure</a>-->
+					</p>
+				</header>
+
+				<div class="post-description pure-u-1">
+					{{{content}}}
+				</div>
+			</section>
+			{{/repo}}
+		</div>
+
+		<footer class="footer">
+			<div class="pure-menu pure-menu-horizontal pure-menu-open">
+				<ul>
+					<li><a href="http://purecss.io/">About</a></li>
+					<li><a href="http://twitter.com/yuilibrary/">Twitter</a></li>
+					<li><a href="http://github.com/yui/pure/">Github</a></li>
+				</ul>
+			</div>
+		</footer>
+	</div>
+</div>
+</body>
+</html>
