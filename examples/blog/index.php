@@ -1,28 +1,25 @@
 <?php
 
-use Phrototype\Model;
-use Phrototype\Validator;
-use Phrototype\Renderer;
-use Phrototype\Writer;
+namespace Blog;
+
+use \Phrototype\Model;
 
 require(__DIR__ . '/../../vendor/autoload.php');
 
-$app = new \Phrototype\App();
-
-$viewReader = new Writer('examples/blog/views/');
-
-$tpl = $viewReader->read('template.mustache');
+$app = new \Phrototype\App(
+	['root' => 'examples/blog/']
+);
 
 echo $app->renderer()
 	->method('mustache')
-	->template($tpl, [
-		'css' => 
-			$app->import([
+	->template(
+		$app->read('views/template.mustache'),
+		['css' => $app->import([
 				 'pure',
 				['blog-layout' => 'http://purecss.io/combo/1.3.10?/css/layouts/blog.css',]
-			]),
+		]),
 	])
 	->render(
-		$viewReader->read('post.mustache'),
+		$app->read('views/post.mustache'),
 		['posts' => Model\Factory::load('examples/blog/data/posts.json')]
 	);

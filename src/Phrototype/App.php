@@ -11,7 +11,7 @@ class App {
 	private $renderer;
 	private $router;
 	private $defaultRenderMethod;
-	private $viewReader;
+	private $appReader;
 
 	/**
 	 * constructor
@@ -21,7 +21,9 @@ class App {
 	public function __construct(array $args = null) {
 		$this->renderer = new Renderer();
 		$this->router = new Router();
-		$this->viewReader = new Writer('views/');
+		$this->appReader = array_key_exists('root', $args) ?
+			  new Writer(Utils::slashify($args['root']))
+			: new Writer(Utils::getDocumentRoot());
 
 		if($args) {
 			$this->defaultRenderMethod =
@@ -34,6 +36,17 @@ class App {
 				$this->renderer->registerExtension($this->method);
 			}
 		}
+	}
+
+	/**
+	 * read
+	 * Read a file
+	 *
+	 * @param file string Location of the file relevant to the document root
+	 * @return string The contents of the file
+	 */
+	public function read($file) {
+		return $this->appReader->read($file);
 	}
 
 	public function router() {
