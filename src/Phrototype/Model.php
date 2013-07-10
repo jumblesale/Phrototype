@@ -1,6 +1,6 @@
 <?php
 
-namespace Phrototype\Model;
+namespace Phrototype;
 
 use Phrototype\Prototype;
 use Phrototype\Writer;

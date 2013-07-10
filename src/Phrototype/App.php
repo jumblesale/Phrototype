@@ -3,8 +3,8 @@
 namespace Phrototype;
 
 use Phrototype\Model;
-use Phrototype\Renderer\Renderer;
-use Phrototype\Router\Router;
+use Phrototype\Renderer;
+use Phrototype\Router;
 use Phrototype\Writer;
 
 class App {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Phrototype\Renderer;
+namespace Phrototype;
 
 use Phrototype\Logue;
 use Phrototype\Renderer\ExtensionRegisterer;

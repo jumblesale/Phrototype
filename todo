@@ -1,6 +1,0 @@
-PHP renderer
-	Renderer which unpacks $data nad includes the requested file
-Remove libs
-	Lib includer to be able to report on its libs, remove them
-Form non-field elements
-	Support for arbitrary markup anywhere in the form

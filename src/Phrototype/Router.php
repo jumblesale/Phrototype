@@ -1,6 +1,6 @@
 <?php
 
-namespace Phrototype\Router;
+namespace Phrototype;
 
 use Phrototype\Prototype;
 use Phrototype\Router\Route;
