@@ -5,7 +5,9 @@ namespace Phrototype;
 class Writer {
 	private $baseDir;
 	public function __construct($baseDir = null) {
-		$this->baseDir = Utils::slashify(Utils::getDocumentRoot()). $baseDir;
+		$this->baseDir =
+			  Utils::slashify(Utils::getDocumentRoot())
+			. $baseDir;
 	}
 
 	public function getBaseDir() {

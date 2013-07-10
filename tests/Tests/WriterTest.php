@@ -6,7 +6,7 @@ use Phrototype\Writer;
 
 class WriterTest extends \PHPUnit_Framework_TestCase {
 	public function setUp() {
-		$this->fixture = new Writer('tests/tmp');
+		$this->fixture = new Writer('tests/tmp/');
 		$this->baseDir = $this->fixture->getBaseDir();
 	}
 

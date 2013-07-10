@@ -36,6 +36,10 @@ class Prototype {
 		}
 	}
 
+	public function __isset($name) {
+		return array_key_exists($name, $this->properties);
+	}
+
 	public function __set($name, $value) {
 		if(gettype($value) === 'object'
 			&& get_class($value) === 'Closure') {

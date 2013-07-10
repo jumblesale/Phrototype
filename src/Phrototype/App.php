@@ -21,7 +21,7 @@ class App {
 	public function __construct(array $args = null) {
 		$this->renderer = new Renderer();
 		$this->router = new Router();
-		$this->viewReader = new Writer('views');
+		$this->viewReader = new Writer('views/');
 
 		if($args) {
 			$this->defaultRenderMethod =
