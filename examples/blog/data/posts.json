@@ -2,5 +2,9 @@
 	{
 		"title": "Welcome to Phrototype!",
 		"content": "A rapid prototyping framework for PHP"
+	},
+	{
+		"title": "What's going on here?",
+		"content": "We've built a blog!"
 	}
 ]

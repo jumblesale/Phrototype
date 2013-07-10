@@ -9,10 +9,16 @@ require(__DIR__ . '/../../vendor/autoload.php');
 
 $app = new \Phrototype\App();
 
-$viewReader = new Writer('examples/blog/views');
+$viewReader = new Writer('examples/blog/views/');
 
-// $posts = Model::load('data/posts.json');
+$posts = Model\Factory::load('examples/blog/data/posts.json');
 
 $tpl = $viewReader->read('template.mustache');
 
-echo $tpl;
+echo $app->renderer()
+	->method('mustache')
+	->template($tpl, [])
+	->render(
+		$viewReader->read('post.mustache'),
+		['posts' => $posts]
+	);
