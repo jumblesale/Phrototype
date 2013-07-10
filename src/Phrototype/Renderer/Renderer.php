@@ -4,6 +4,7 @@ namespace Phrototype\Renderer;
 
 use Phrototype\Logue;
 use Phrototype\Renderer\ExtensionRegisterer;
+use Phrototype\Renderer\LibIncluder;
 
 class Renderer {
 	private $method;
@@ -13,6 +14,8 @@ class Renderer {
 	private $template;
 	private $templateData = [];
 	private $contentKey = 'content';
+
+	private $importer;
 
 	private $defaultMethods = [
 		'html'	=> [
@@ -38,6 +41,11 @@ class Renderer {
 	public function __construct() {
 		$this->registerDefaultMethods();
 		$this->extensionRegisterer = new ExtensionRegisterer();
+		$this->importer = new LibIncluder();
+	}
+
+	public static function create() {
+		return new Renderer();
 	}
 
 	public function template($t = null, $v = null) {
@@ -55,6 +63,10 @@ class Renderer {
 			return $this;
 		}
 		return $this->contentKey;
+	}
+
+	public function importer() {
+		return $this->importer;
 	}
 
 	public function registerDefaultMethods() {

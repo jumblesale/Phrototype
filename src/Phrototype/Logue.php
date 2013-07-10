@@ -26,7 +26,7 @@ class Logue {
 		if(self::$level === null) {self::level(5);}
 		if(self::$level >= $level) {
 			// TODO: write this to a file or something!
-			echo $message . PHP_EOL;
+			error_log($message);
 			return true;
 		}
 		return false;
