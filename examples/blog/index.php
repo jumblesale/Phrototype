@@ -7,10 +7,11 @@ use \Phrototype\Model;
 require(__DIR__ . '/../../vendor/autoload.php');
 
 $app = new \Phrototype\App(
-	['root' => 'examples/blog/']
+	['root' => 'examples/blog/'
+	,'defaultRenderer' => 'mustache']
 );
 
-echo $app->renderer()
+$app->renderer()
 	->method('mustache')
 	->template(
 		$app->read('views/template.mustache'),
@@ -18,8 +19,13 @@ echo $app->renderer()
 				 'pure',
 				['blog-layout' => 'http://purecss.io/combo/1.3.10?/css/layouts/blog.css',]
 		]),
-	])
-	->render(
+	]);
+
+$app->router()->get('/posts', function() use($app) {
+	return $app->render(
 		$app->read('views/post.mustache'),
 		['posts' => Model\Factory::load('examples/blog/data/posts.json')]
 	);
+});
+
+echo $app->go();
