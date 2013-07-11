@@ -76,4 +76,29 @@ class AddTest extends \PHPUnit_Framework_TestCase {
 			$models[3]
 		);
 	}
+
+	public function testAddingAndSaving() {
+		$array = [
+			['name' => 'tufted'],
+			['name' => 'mandarin'],
+			['name' => 'runner']
+		];
+		$ducks = Model\Factory::load($array);
+
+		$ducks->add(Model::forge(['name' => 'mallard']));
+
+		$ducks->save('tests/tmp/ducks.json');
+
+		$loaded = Model\Factory::load('tests/tmp/ducks.json');
+
+		$this->assertEquals(
+			Model\Factory::load([
+				['name' => 'tufted'],
+				['name' => 'mandarin'],
+				['name' => 'runner'],
+				['name' => 'mallard'],
+			]),
+			$loaded
+		);
+	}
 }
