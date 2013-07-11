@@ -1,0 +1,25 @@
+[
+	{
+		"title": "Welcome to Phrototype!",
+		"content": "<p>A rapid prototyping framework for PHP.</p><p>This demo uses Phrototype and Pure CSS to create a pretty cool little blogging site.</p>",
+		"author": {
+			"name": "rob",
+			"href": "http://robsollars.co.uk"
+		},
+		"tags": [
+			{"name": "phrototype", "href": "https://github.com/jumblesale/Phrototype", "tag": "design"},
+			{"name": "pure", "tag": "pure", "href": "http://purecss.io"}
+		]
+	},
+	{
+		"title": "What's going on here?",
+		"content": "<p>We've built a blog!</p>",
+		"author": {
+			"name": "rob",
+			"href": "http://robsollars.co.uk"
+		},
+		"tags": [
+			{"name": "uncategorised", "href": "#", "tag": "uncategorised"}
+		]
+	}
+]

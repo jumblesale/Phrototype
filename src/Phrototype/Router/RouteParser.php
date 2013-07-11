@@ -32,6 +32,6 @@ class RouteParser {
 	}
 
 	public function path() {
-		return $this->request['PATH_INFO'];
+		return $this->request['PHP_SELF'];
 	}
 }

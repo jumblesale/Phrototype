@@ -11,6 +11,7 @@ class App {
 	private $renderer;
 	private $router;
 	private $defaultRenderMethod;
+	private $appReader;
 	private $viewReader;
 	private $routeParser;
 
@@ -18,24 +19,38 @@ class App {
 	 * constructor
 	 * Takes a hash of args
 	 * @param defaultRenderer string Overload the default render method
+	 * @param root string The root directory of the app
 	 */
-	public function __construct(array $args = null) {
+	public function __construct(array $args = array()) {
 		$this->renderer = new Renderer();
 		$this->router = new Router();
-		$this->routeParser = new RouteParser();
-		$this->viewReader = new Writer('views/');
+		$this->routeParser = new Router\RouteParser($_SERVER);
+		$this->appReader = array_key_exists('root', $args) ?
+			  new Writer(Utils::slashify($args['root']))
+			: new Writer(Utils::getDocumentRoot());
 
 		if($args) {
 			$this->defaultRenderMethod =
 				  array_key_exists('defaultRenderer', $args) ?
 				  $args['defaultRenderer']
-				: 'mustache';
+				: 'html';
 			// If the method isn't registered, load it up!
 			$method = $this->defaultRenderMethod;
 			if(!$this->renderer->methodExists($method)) {
-				$this->renderer->registerExtension($this->method);
+				$this->renderer->registerExtension($method);
 			}
 		}
+	}
+
+	/**
+	 * read
+	 * Read a file
+	 *
+	 * @param file string Location of the file relevant to the document root
+	 * @return string The contents of the file
+	 */
+	public function read($file) {
+		return $this->appReader->read($file);
 	}
 
 	public function router() {
@@ -52,27 +67,42 @@ class App {
 			: $this->defaultRenderMethod;
 	}
 
-	// Dispatch the request to the registered route
-	public function go() {
-		return $this->router->dispatch(
-			$this->routeParser->verb(),
-			$this->routeParser->path()
-		);
+	public function import($libs) {
+		return $this->renderer->importer()->import($libs);
 	}
+
+	// Dispatch the request to the registered route
+	public function go($verb = null, $path = null) {
+		$verb = $verb ?: $this->routeParser->verb();
+		$path = $path ?: $this->routeParser->path();
+		Logue::Log("Dispatching: $verb:$path", Logue::INFO);
+		if($this->router->matches($verb, $path)) {
+			return $this->router->dispatch(
+				$verb,
+				$path
+			);
+		} else {
+			Logue::log("No path registered for $path, 404ing", Logue::WARN);
+			return $this->fourohfour();
+		}
+	}
+
+	private function fourohfour() {echo 'my spleen!'; return false;}
 
 	/**
 	 * render
-	 * @param renderer string The name of the renderer to use (json, text, etc.)
-	 * @param data mixed The data to render; accepts objects
 	 * @param view mixed The view to insert into the template
+	 * @param data mixed The data to render; accepts objects
+	 * @param method string The name of the renderer to use (json, text, etc.)
 	 * @param template mixed The template to use, or the location of the template
 	 * @param callback function A post-render callback
 	 * @param method string The magic method to use if desired (view, edit, etc.)
 	 */
 	public function render(
-		$renderer, $view, $data = null, $template = null, $callback = null
+		$view, $data = null, $method = null, $template = null, $callback = null
 	) {
-		return $this->renderer->method($renderer)->render($view, $data);
+		$method = $method ?: $this->defaultMethod;
+		return $this->renderer->method($method)->render($view, $data);
 	}
 
 	public function view($data) {
@@ -92,9 +122,5 @@ class App {
 			$this->viewReader->read('view.mustache'),
 			$pairs
 		);
-	}
-
-	public function add($validator) {
-		return $this->render('html', $validator->html());
 	}
 }

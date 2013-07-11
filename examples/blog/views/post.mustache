@@ -1,0 +1,22 @@
+{{#posts}}
+<section class="post pure-u-1">
+	<header class="post-header">
+		<h2 class="post-title pure-u-1">{{title}}</h2>
+
+		<p class="post-meta pure-u-1">
+			{{#author}}By <a href="{{href}}" class="post-author">{{name}}</a>{{/author}}
+			{{#tags}}
+				<a class="post-category post-category-{{tag}}" href="{{href}}">{{name}}</a>
+			{{/tags}}
+			{{^tags}}
+				<a class="post-category post-category" href="#">uncategorised</a>
+			{{/tags}}
+			
+		</p>
+	</header>
+
+	<div class="post-description pure-u-1">
+		{{{content}}}
+	</div>
+</section>
+{{/posts}}
