@@ -23,15 +23,19 @@ class App {
 	public function __construct(array $args = null) {
 		$this->renderer = new Renderer();
 		$this->router = new Router();
-		$this->routeParser = new RouteParser();
-		$this->viewReader = new Writer('views/');
-
-		// Default to html rendering
-		$this->defaultMethod = 'html';
+		$this->appReader = array_key_exists('root', $args) ?
+			  new Writer(Utils::slashify($args['root']))
+			: new Writer(Utils::getDocumentRoot());
 
 		if($args) {
-			if(array_key_exists('defaultRenderer', $args)) {
-				$this->defaultRenderMethod = $args['defaultRenderer'];
+			$this->defaultRenderMethod =
+				  array_key_exists('defaultRenderer', $args) ?
+				  $args['defaultRenderer']
+				: 'mustache';
+			// If the method isn't registered, load it up!
+			$method = $this->defaultRenderMethod;
+			if(!$this->renderer->methodExists($method)) {
+				$this->renderer->registerExtension($this->method);
 			}
 		}
 	}
