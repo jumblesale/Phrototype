@@ -28,17 +28,13 @@ class App {
 		$this->appReader = array_key_exists('root', $args) ?
 			  new Writer(Utils::slashify($args['root']))
 			: new Writer(Utils::getDocumentRoot());
+		$this->defaultRenderMethod = 'html';
 
 		if($args) {
 			$this->defaultRenderMethod =
 				  array_key_exists('defaultRenderer', $args) ?
 				  $args['defaultRenderer']
 				: 'html';
-			// If the method isn't registered, load it up!
-			$method = $this->defaultRenderMethod;
-			if(!$this->renderer->methodExists($method)) {
-				$this->renderer->registerExtension($method);
-			}
 		}
 	}
 
@@ -101,7 +97,11 @@ class App {
 	public function render(
 		$view, $data = null, $method = null, $template = null, $callback = null
 	) {
-		$method = $method ?: $this->defaultMethod;
+		$method = $method === null ? $this->defaultRenderMethod : $method;
+		if(!$this->renderer->method($method)) {
+			throw new \Exception("Tried to render with $method but it was not "
+				. "available and could not be autoloaded.");
+		}
 		return $this->renderer->method($method)->render($view, $data);
 	}
 
