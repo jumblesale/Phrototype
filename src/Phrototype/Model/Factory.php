@@ -33,6 +33,6 @@ class Factory {
 		foreach($data as $datum) {
 			$objects[] = self::create($datum, $prototype);
 		}
-		return $objects;
+		return new Collection($objects);
 	}
 }
