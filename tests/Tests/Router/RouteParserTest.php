@@ -11,13 +11,12 @@ class RouteParserTest extends \PHPUnit_Framework_TestCase {
 			'SERVER_PROTOCOL' => 'HTTP/1.1',
 			'SERVER_NAME' => 'localhost',
 			'SERVER_PORT' => '1066',
-			'REQUEST_URI' => '/?one=1&two=2',
+			'REQUEST_URI' => '/something/someotherthing?one=1&two=2',
 			'REQUEST_METHOD' => 'GET',
 			'SCRIPT_NAME' => '/index.php',
 			'SCRIPT_FILENAME' => '/srv/Phrototype/index.php',
-			'PHP_SELF' => '/index.php',
+			'PHP_SELF' => '/something/someotherthing',
 			'QUERY_STRING' => 'one=1&two=2',
-			'PATH_INFO' => '/path/to/this/page'
 		];
 	}
 
@@ -63,7 +62,7 @@ class RouteParserTest extends \PHPUnit_Framework_TestCase {
 	public function testPath() {
 		$parser = new RouteParser($this->request);
 		$this->assertEquals(
-			'/path/to/this/page',
+			'/something/someotherthing',
 			$parser->path()
 		);
 	}
