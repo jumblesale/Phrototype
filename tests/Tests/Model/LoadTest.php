@@ -23,7 +23,6 @@ class LoadTest extends \PHPUnit_Framework_TestCase {
 		$bookshelf	= $this->bookshelf;
 		$dystopias	= Model\Factory::load($bookshelf, $book);
 
-		$this->assertTrue(is_array($dystopias));
 		$this->assertFalse(empty($dystopias));
 
 		foreach($dystopias as $i => $dystopia) {
@@ -34,18 +33,6 @@ class LoadTest extends \PHPUnit_Framework_TestCase {
 					$dystopia->getProperties()[$property]
 				);
 			}
-		}
-	}
-
-	public function testLoadingOnPrototypeSetsPrototypeInReturnedObjects() {
-		$proto		= Model\Factory::create($this->book);
-		$bookshelf	= $proto->load($this->bookshelf);
-
-		$this->assertNotEmpty($bookshelf);
-		$this->assertEquals(3, sizeof($bookshelf));
-
-		foreach($bookshelf as $i => $book) {
-			$this->assertEquals($this->bookshelf[$i], $book->getProperties());
 		}
 	}
 

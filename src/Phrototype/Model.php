@@ -7,25 +7,45 @@ use Phrototype\Writer;
 use Phrototype\Utils;
 
 class Model extends Prototype {
-	public function save($filename, $directory) {
-		touch(
-			Utils::slashify(Utils::getDocumentRoot() . $directory) . $filename
-		);
+	public function save($location) {
+		$w = new Writer();
+		$w->write($location, json_encode($this->toArray()));
 	}
 
-	public function load($data = null) {
-		if(!is_array($data)) {
-			return $data;
+	public function toArray() {
+		$array = [];
+		foreach($this->properties as $name => $value) {
+			$array[$name] = $value;
 		}
-		$objs = [];
-		foreach($data as $datum) {
-			$objs[] = $this->forge($datum);
-		}
-
-		return $objs;
+		return $array;
 	}
 
-	public function forge(array $data = array()) {
-		return Prototype::create($data, $this, get_class($this));
+	public static function load($data = null) {
+		if(is_string($data)) {
+			$w = new Writer();
+			$json;
+			try {
+				$json = $w->read($data);
+			} catch(\Exception $e) {
+				throw new \Exception("Unable to load model from $data,"
+					. " location in unreachable with " . $e->getMessage());
+			}
+			$json = json_decode($json, true);
+			if(!$json) {
+				throw new \Exception("JSON in $data is malformed");
+				return false;
+			}
+			return self::forge($json);
+		}
+		$obj = [];
+		foreach($data as $name => $value) {
+			$obj[$name] = $value;
+		}
+
+		return self::forge($obj);
+	}
+
+	public static function forge(array $data = array(), $prototype = null) {
+		return Prototype::create($data, $prototype, '\Phrototype\Model');
 	}
 }
