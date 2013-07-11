@@ -12,6 +12,7 @@ class App {
 	private $router;
 	private $defaultRenderMethod;
 	private $viewReader;
+	private $routeParser;
 
 	/**
 	 * constructor
@@ -21,6 +22,7 @@ class App {
 	public function __construct(array $args = null) {
 		$this->renderer = new Renderer();
 		$this->router = new Router();
+		$this->routeParser = new RouteParser();
 		$this->viewReader = new Writer('views/');
 
 		if($args) {
@@ -48,6 +50,14 @@ class App {
 		return $v ?
 			  $this->defaultRenderMethod = $v
 			: $this->defaultRenderMethod;
+	}
+
+	// Dispatch the request to the registered route
+	public function go() {
+		return $this->router->dispatch(
+			$this->routeParser->verb(),
+			$this->routeParser->path()
+		);
 	}
 
 	/**

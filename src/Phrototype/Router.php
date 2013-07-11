@@ -4,10 +4,16 @@ namespace Phrototype;
 
 use Phrototype\Prototype;
 use Phrototype\Router\Route;
+use Phrototype\Router\RouteParser;
 
 class Router extends Prototype {
 
 	private $routes;
+	private $routeParser;
+
+	public function __construct() {
+		$this->routeParser = new RouteParser($_SERVER);
+	}
 
 	public function dispatch($verb, $path = null) {
 		if(!array_key_exists($verb, $this->routes)) {

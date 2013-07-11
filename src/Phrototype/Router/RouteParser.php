@@ -22,14 +22,13 @@ class RouteParser {
 	}
 
 	public function query() {
-		// This feels inelegant
-		$parts = explode('&', $this->request['QUERY_STRING']);
-		$hash = [];
-		foreach($parts as $part) {
-			$values = explode('=', $part);
-			$hash[$values[0]] = $values[1];
+		if($this->verb() == 'get') {
+			return $_GET;
 		}
-		return $hash;
+		if($this->verb() == 'post') {
+			return $_POST;
+		}
+		return null;
 	}
 
 	public function path() {
