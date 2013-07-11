@@ -12,6 +12,10 @@ class Collection implements
 	private $contents = [];
 	private $ids = [];
 
+	public function models() {
+		return $this->contents;
+	}
+
 	public function count() {
 		return count($this->contents);
 	}
@@ -26,17 +30,21 @@ class Collection implements
 		}
 		return $this->contents[$this->ids[$offset]];
 	}
+
 	public function offsetSet($offset, $value) {
 		if(
-			   is_array($value)
-			&& array_key_exists('id', $value)
+			   is_a($value, '\Phrototype\Prototype')
+			&& $value->id
 		) {
-			$this->ids[$value['id']] = $value;
+			$this->contents[] = $value;
+			$this->ids[$value->id] = count($this->contents) - 1;
 		} else {
-			$this->ids[] = $value;
-			$this->contents[count($this->ids)] = $value;
+			$index = count($this->ids);
+			$this->ids[$index] = $index;
+			$this->contents[$index] = $value;
 		}
 	}
+
 	public function offsetUnset($offset) {
 		unset($this->contents[$this->ids[$offset]]);
 		unset($this->ids[$offset]);
@@ -68,6 +76,10 @@ class Collection implements
 				$this->ids[$index] = $index;
 			}
 		}
+	}
+
+	public function add(\Phrototype\Prototype $model) {
+		$this->offsetSet(null, $model);
 	}
 
 	public function toArray() {

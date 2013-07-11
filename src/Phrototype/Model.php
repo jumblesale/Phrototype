@@ -45,7 +45,7 @@ class Model extends Prototype {
 		return self::forge($obj);
 	}
 
-	public static function forge(array $data = array()) {
-		return Prototype::create($data, null, '\Phrototype\Model');
+	public static function forge(array $data = array(), $prototype = null) {
+		return Prototype::create($data, $prototype, '\Phrototype\Model');
 	}
 }
