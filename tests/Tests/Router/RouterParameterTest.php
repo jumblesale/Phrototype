@@ -20,10 +20,9 @@ class RouterParameterTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testSingleParameterIsSet() {
-		return;
 		$this->assertEquals(
 			'pug is the best kind of dog',
-			$this->fixture->get('/dog/:type', function($self, $dog) {
+			$this->fixture->get('/dog/:type', function($dog) {
 				return "$dog is the best kind of dog";
 			})->dispatch('get', '/dog/pug')
 		);

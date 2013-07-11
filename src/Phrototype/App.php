@@ -12,6 +12,8 @@ class App {
 	private $router;
 	private $defaultRenderMethod;
 	private $appReader;
+	private $viewReader;
+	private $routeParser;
 
 	/**
 	 * constructor
@@ -21,9 +23,8 @@ class App {
 	public function __construct(array $args = null) {
 		$this->renderer = new Renderer();
 		$this->router = new Router();
-		$this->appReader = array_key_exists('root', $args) ?
-			  new Writer(Utils::slashify($args['root']))
-			: new Writer(Utils::getDocumentRoot());
+		$this->routeParser = new RouteParser();
+		$this->viewReader = new Writer('views/');
 
 		if($args) {
 			$this->defaultRenderMethod =
@@ -65,6 +66,14 @@ class App {
 
 	public function import($libs) {
 		return $this->renderer->importer()->import($libs);
+	}
+	
+	// Dispatch the request to the registered route
+	public function go() {
+		return $this->router->dispatch(
+			$this->routeParser->verb(),
+			$this->routeParser->path()
+		);
 	}
 
 	/**
