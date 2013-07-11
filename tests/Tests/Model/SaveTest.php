@@ -7,30 +7,39 @@ use Phrototype\Utils;
 use Phrototype\Model;
 
 class SaveTest extends \PHPUnit_Framework_TestCase {
-	public function __destruct() {
-		$w = new Writer('tests/tmp');
-		$w->purge();
+	public function tearDown() {
+		$this->w = new Writer('tests/tmp');
+		$this->w->purge();
 	}
 
 	public function testSaveCreatesFile() {
 		$dog = Model\Factory::create(['name' => 'Charles', 'sound' => 'bark']);
 
-		$this->assertFileNotExists('charles.json');
-
-		$dog->save('charles', 'tests/tmp');
-
-		$this->assertFileExists(
-			Utils::getDocumentRoot() . 'tests/tmp/charles'
+		$this->assertFileNotExists(
+			Utils::getDocumentRoot() . 'tests/tmp/charles.json'
 		);
 
-		return $dog;
+		$dog->save('tests/tmp/charles.json');
+
+		$this->assertFileExists(
+			Utils::getDocumentRoot() . 'tests/tmp/charles.json'
+		);
 	}
 
-	/**
-	 * @depends testSaveCreatesFile
-	 */
-	public function testLoadReadsFiles($dog) {
-		$read = $dog->load('tests/tmp/charles');
-		$this->assertNotNull($read);
+	public function testSaveAndLoadSingleModel() {
+		$dog = Model\Factory::create(['name' => 'Charles', 'sound' => 'bark']);
+
+		$dog->save(
+			'tests/tmp/charles.json'
+		);
+
+		$loaded = Model::load(
+			'tests/tmp/charles.json'
+		);
+
+		$this->assertEquals(
+			$dog,
+			$loaded
+		);
 	}
 }

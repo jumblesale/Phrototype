@@ -3,10 +3,18 @@
 namespace Phrototype\Model;
 
 use Phrototype\Model;
+use Phrototype\Writer;
 
-class Collection implements \ArrayAccess {
+class Collection implements
+	\ArrayAccess,
+	\Countable
+{
 	private $contents = [];
 	private $ids = [];
+
+	public function count() {
+		return count($this->contents);
+	}
 
 	public function offsetExists($offset) {
 		return in_array($offset, array_keys($this->ids));
@@ -63,10 +71,15 @@ class Collection implements \ArrayAccess {
 	}
 
 	public function toArray() {
-		$models = [];
-		foreach($this->ids as $id => $index) {
-			$models[$id] = $this->contents[$index];
+		$arrays = [];
+		foreach($this->contents as $model) {
+			$arrays[] = $model->toArray();
 		}
-		return $models;
+		return $arrays;
+	}
+
+	public function save($location) {
+		$w = new Writer();
+		$w->write($location, json_encode($this->toArray()));
 	}
 }

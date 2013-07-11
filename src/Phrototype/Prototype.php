@@ -3,8 +3,8 @@
 namespace Phrototype;
 
 class Prototype {
-	private $properties;
-	private $prototype;
+	protected $properties = [];
+	protected $prototype;
 
 	public function __construct($properties = []) {
 		$this->properties = $properties;

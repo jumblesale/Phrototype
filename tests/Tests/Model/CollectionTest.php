@@ -8,7 +8,7 @@ use Phrototype\Model;
 
 class CollectionTest extends \PHPUnit_Framework_TestCase {
 	public function philosophers() {
-		$models = Model\Factory::load([
+		$this->array = [
 			[
 				'id' => 3,
 				'name' => 'locke',
@@ -26,7 +26,9 @@ class CollectionTest extends \PHPUnit_Framework_TestCase {
 				'school' => 'cartesianism',
 				'quote' => 'cogito ergo sum',
 			],
-		]);
+		];
+
+		$models = Model\Factory::load($this->array);
 
 		return $models;
 	}
@@ -64,13 +66,29 @@ class CollectionTest extends \PHPUnit_Framework_TestCase {
 		$models = $this->philosophers();
 
 		$this->assertEquals(
-			[3, 8, 1],
-			array_keys($models->toArray())
+			$this->array,
+			$models->toArray()
 		);
 
 		$this->assertEquals(
 			'cogito ergo sum',
-			$models->toArray()[1]->quote
+			$models->toArray()[2]['quote']
+		);
+	}
+
+	public function testSave() {
+		$philosophers = $this->philosophers();
+		$path = 'tests/tmp/philosophers.json';
+
+		$philosophers->save($path);
+
+		$this->assertFileExists($path);
+
+		$loaded = Model\Factory::load($path);
+
+		$this->assertEquals(
+			$philosophers,
+			$loaded
 		);
 	}
 }

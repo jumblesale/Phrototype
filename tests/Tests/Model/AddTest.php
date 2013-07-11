@@ -11,4 +11,8 @@ class AddTest extends \PHPUnit_Framework_TestCase {
 		$w = new Writer('tests/tmp');
 		$w->purge();
 	}
+
+	public function testShutupPhpunit() {
+		$this->assertTrue(true);
+	}
 }

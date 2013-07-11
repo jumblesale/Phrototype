@@ -26,9 +26,13 @@ class Factory {
 	public static function load($data = array(), $prototype = null) {
 		$objects = [];
 		if(is_string($data)) {
-			$writer = new Writer($data);
+			$writer = new Writer();
 			// Assume json for now
-			$data = json_decode($writer->read(), true);
+			$json = json_decode($writer->read($data), true);
+			if(!$json) {
+				throw new \Exception("Could not load JSON from $data");
+			}
+			$data = $json;
 		}
 		foreach($data as $datum) {
 			$objects[] = self::create($datum, $prototype);
