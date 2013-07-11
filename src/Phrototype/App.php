@@ -26,15 +26,12 @@ class App {
 		$this->routeParser = new RouteParser();
 		$this->viewReader = new Writer('views/');
 
+		// Default to html rendering
+		$this->defaultMethod = 'html';
+
 		if($args) {
-			$this->defaultRenderMethod =
-				  array_key_exists('defaultRenderer', $args) ?
-				  $args['defaultRenderer']
-				: 'mustache';
-			// If the method isn't registered, load it up!
-			$method = $this->defaultRenderMethod;
-			if(!$this->renderer->methodExists($method)) {
-				$this->renderer->registerExtension($this->method);
+			if(array_key_exists('defaultRenderer', $args)) {
+				$this->defaultRenderMethod = $args['defaultRenderer'];
 			}
 		}
 	}
@@ -67,7 +64,7 @@ class App {
 	public function import($libs) {
 		return $this->renderer->importer()->import($libs);
 	}
-	
+
 	// Dispatch the request to the registered route
 	public function go() {
 		return $this->router->dispatch(
@@ -108,9 +105,5 @@ class App {
 			$this->viewReader->read('view.mustache'),
 			$pairs
 		);
-	}
-
-	public function add($validator) {
-		return $this->render('html', $validator->html());
 	}
 }
