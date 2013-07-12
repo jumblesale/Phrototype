@@ -80,6 +80,7 @@ class Collection implements
 
 	public function add(\Phrototype\Prototype $model) {
 		$this->offsetSet(null, $model);
+		return $this;
 	}
 
 	public function toArray() {
@@ -92,6 +93,11 @@ class Collection implements
 
 	public function save($location) {
 		$w = new Writer();
-		$w->write($location, json_encode($this->toArray()));
+		$w->write($location, '');
+		$w->write(
+			$location,
+			json_encode($this->toArray(), JSON_PRETTY_PRINT),
+			true
+		);
 	}
 }

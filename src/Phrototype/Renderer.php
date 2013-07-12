@@ -12,7 +12,6 @@ class Renderer {
 	private $methods = [];
 
 	private $template;
-	private $templateData = [];
 	private $contentKey = 'content';
 
 	private $importer;
@@ -42,18 +41,25 @@ class Renderer {
 		$this->registerDefaultMethods();
 		$this->extensionRegisterer = new ExtensionRegisterer();
 		$this->importer = new LibIncluder();
+		$this->templateData = Model::forge();
 	}
 
 	public static function create() {
 		return new Renderer();
 	}
 
-	public function template($t = null, $v = null) {
+	public function template($t = null, array $v = null) {
 		if($t) {
 			$this->template = $t;
-			$this->templateData = $v;
+			if($v) {
+				$this->templateData = Model::forge($v);
+			}
 			return $this;
 		}
+		return $this->templateData;
+	}
+
+	public function getTemplate() {
 		return $this->template;
 	}
 
@@ -172,17 +178,17 @@ class Renderer {
 
 	public function render($args) {
 		$args = func_get_args();
-		if($this->template()) {
-			$content = call_user_func_array([$this, '__render'], $args);
+		$content = call_user_func_array([$this, '__render'], $args);
+		if($this->template) {
 			$templateArgs = array_merge(
-				$this->templateData,
+				$this->templateData->getProperties(),
 				[$this->contentKey() => $content]
 			);
 			return $this->__render(
-				$this->template(),
+				$this->template,
 				$templateArgs
 			);
 		}
-		return call_user_func_array([$this, '__render'], $args);
+		return $content;
 	}
 }

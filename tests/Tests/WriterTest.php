@@ -55,4 +55,13 @@ class WriterTest extends \PHPUnit_Framework_TestCase {
 			$this->fixture->read('test')
 		);
 	}
+
+	public function testClear() {
+		$this->fixture->write('clear', 'delete me!');
+		$this->fixture->clear('clear');
+		$this->assertEquals(
+			'',
+			$this->fixture->read('clear')
+		);
+	}
 }

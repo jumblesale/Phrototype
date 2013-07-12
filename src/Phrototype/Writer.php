@@ -14,13 +14,13 @@ class Writer {
 		return $this->baseDir;
 	}
 
-	public function write($location, $data = null) {
+	public function write($location, $data = null, $clear = false) {
 		$location = Utils::slashify($this->baseDir) . $location;
 		if(!is_writable(dirname($location))) {
 			throw new \Exception("Could not write to $location");
 		}
 		$flags = null;
-		if(file_exists($location)) {
+		if(!$clear && file_exists($location)) {
 			$flags =  FILE_APPEND;
 		}
 		return file_put_contents($location, $data, $flags);
@@ -42,5 +42,9 @@ class Writer {
 				unlink($location . $fileInfo->getFilename());
 			}
 		}
+	}
+
+	public function clear($location = null) {
+		return $this->write($location, null, true);
 	}
 }

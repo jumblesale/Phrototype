@@ -31,6 +31,9 @@ class RouteParser {
 		return null;
 	}
 
+	public function get() {return $_GET;}
+	public function post() {return $_POST;}
+
 	public function path() {
 		return $this->request['PHP_SELF'];
 	}

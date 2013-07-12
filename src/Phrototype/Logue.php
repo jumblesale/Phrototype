@@ -22,7 +22,7 @@ class Logue {
 			: self::$level;
 	}
 
-	public static function log($message, $level) {
+	public static function log($message, $level = 5) {
 		if(self::$level === null) {self::level(5);}
 		if(self::$level >= $level) {
 			// TODO: write this to a file or something!

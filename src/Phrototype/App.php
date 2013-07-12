@@ -57,6 +57,10 @@ class App {
 		return $this->renderer;
 	}
 
+	public function request() {
+		return $this->routeParser;
+	}
+
 	public function defaultRenderer($v) {
 		return $v ?
 			  $this->defaultRenderMethod = $v
@@ -103,24 +107,5 @@ class App {
 				. "available and could not be autoloaded.");
 		}
 		return $this->renderer->method($method)->render($view, $data);
-	}
-
-	public function view($data) {
-		$pairs = [];
-		// Munge the data into key / value pairs
-		foreach($data as $datum) {
-			if(gettype($datum) === 'object'
-				&& is_a($datum, '\Phrototype\Prototype')) {
-				$datum = $datum->getProperties();
-			}
-			foreach($datum as $k => $v) {
-				array_push($pairs, ['key' => $k, 'value' => print_r($v, true)]);
-			}
-		}
-		return $this->render(
-			'mustache',
-			$this->viewReader->read('view.mustache'),
-			$pairs
-		);
 	}
 }

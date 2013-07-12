@@ -12,6 +12,7 @@ class Validator {
 	private $currentGroup;
 	private $messages;
 	private $form;
+	private $data;
 
 	public function __construct() {
 		$this->form = new Form();
@@ -67,22 +68,31 @@ class Validator {
 
 	public function validate($data) {
 		$messages = [];
+		$values = [];
 		$success = true;
 		foreach($this->fields as $name => $field) {
 			$messages[$name] = [];
 			$value = array_key_exists($name, $data) ?
 				  $data[$name]
 				: null;
-			if($field->required() && $value === null) {
+			if($field->required() && !$field->nullable() && $value == null) {
 				$success = false;
 				array_push($messages[$name], "$name is a required field");
 			} else {
 				$success = $success && $field->validate($value);
-				$messages[$name] = $field->messages();
+				if($field->messages()) {
+					$messages[$name] = $field->messages();
+				}
 			}
+			$values[$name] = $value;
 		}
 		$this->messages = $messages;
+		$this->data = $values;
 		return $success;
+	}
+
+	public function data() {
+		return $this->data;
 	}
 
 	public function html() {
