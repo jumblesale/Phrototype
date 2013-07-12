@@ -12,6 +12,12 @@ class Model extends Prototype {
 		$w->write($location, json_encode($this->toArray()));
 	}
 
+	/**
+	 * toArray
+	 * Get the array representation of this model
+	 * Note: this won't marshal any functions. Sorry :(
+	 * @returns array
+	 */
 	public function toArray() {
 		$array = [];
 		foreach($this->properties as $name => $value) {
@@ -20,6 +26,15 @@ class Model extends Prototype {
 		return $array;
 	}
 
+	/**
+	 * load
+	 * Load a collection of models
+	 *
+	 * @param data mixed An array of data; or, a string giving the location of
+	 * a file containing JSON data
+	 * @returns A new \Phrototype\Model on success or false if the model could not
+	 * be created
+	 */
 	public static function load($data = null) {
 		if(is_string($data)) {
 			$w = new Writer();
@@ -45,6 +60,13 @@ class Model extends Prototype {
 		return self::forge($obj);
 	}
 
+	/**
+	 * forge
+	 * Create a new model
+	 *
+	 * @param data array An aray of data to use
+	 * @param prototype object An object to use as the model's prototype
+	 */
 	public static function forge(array $data = array(), $prototype = null) {
 		return Prototype::create($data, $prototype, '\Phrototype\Model');
 	}
