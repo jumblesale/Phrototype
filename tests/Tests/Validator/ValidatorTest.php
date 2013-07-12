@@ -95,4 +95,21 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 		$dom = new \DOMDocument();
 		$this->assertTrue($dom->loadHTML($html));
 	}
+
+	public function testGeneratingData() {
+		$this->fixture->field('username');
+		$this->fixture->field('password');
+
+		$this->fixture->validate(
+			['username' => 'charles'
+			,'password' => 'wrongponyfreerangeunusual'
+			,'haxx' => ' OR 1=1; DROP ALL THE DATABASES --']
+		);
+
+		$this->assertEquals(
+			['username' => 'charles'
+			,'password' => 'wrongponyfreerangeunusual'],
+			$this->fixture->data()
+		);
+	}
 }

@@ -12,6 +12,7 @@ class Validator {
 	private $currentGroup;
 	private $messages;
 	private $form;
+	private $data;
 
 	public function __construct() {
 		$this->form = new Form();
@@ -67,6 +68,7 @@ class Validator {
 
 	public function validate($data) {
 		$messages = [];
+		$values = [];
 		$success = true;
 		foreach($this->fields as $name => $field) {
 			$messages[$name] = [];
@@ -80,9 +82,15 @@ class Validator {
 				$success = $success && $field->validate($value);
 				$messages[$name] = $field->messages();
 			}
+			$values[$name] = $value;
 		}
 		$this->messages = $messages;
+		$this->data = $values;
 		return $success;
+	}
+
+	public function data() {
+		return $this->data;
 	}
 
 	public function html() {
