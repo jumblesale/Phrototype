@@ -15,6 +15,7 @@ class Field {
 	private $container = [];
 	private $value = null;
 	private $description;
+	private $nullable = false;
 
 	public function __construct($name = null, $type = null) {
 		$this->name = $name;
@@ -68,6 +69,14 @@ class Field {
 			return $this;
 		}
 		return $this->required;
+	}
+
+	public function nullable($v = null) {
+		if($v !== null) {
+			$this->nullable = $v;
+			return $this;
+		}
+		return $this->nullable;
 	}
 
 	public function options(array $v = null) {

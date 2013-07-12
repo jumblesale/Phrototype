@@ -112,4 +112,24 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase {
 			$this->fixture->data()
 		);
 	}
+
+	public function testRequiredFields() {
+		$this->fixture->field('default');
+		$this->fixture->field('notrequired')->required(false);
+		$this->fixture->field('nullable')->nullable(true);
+
+		$this->assertFalse(
+			$this->fixture->validate(
+				['default' => null
+				,'nullable' => 3]
+			)
+		);
+
+		$this->assertTrue(
+			$this->fixture->validate(
+				['default' => 3
+				,'nullable' => null]
+			)
+		);
+	}
 }

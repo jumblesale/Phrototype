@@ -75,7 +75,7 @@ class Validator {
 			$value = array_key_exists($name, $data) ?
 				  $data[$name]
 				: null;
-			if($field->required() && $value === null) {
+			if($field->required() && !$field->nullable() && $value === null) {
 				$success = false;
 				array_push($messages[$name], "$name is a required field");
 			} else {
