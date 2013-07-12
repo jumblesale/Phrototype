@@ -15,11 +15,13 @@ $app->renderer()
 	->method('mustache')
 	->template(
 		$app->read('views/template.mustache'),
-		['css' => $app->import([
+		[
+			'css' => $app->import([
 				 'pure',
 				['blog-layout' => 'http://purecss.io/combo/1.3.10?/css/layouts/blog.css',]
-		]),
-	]);
+			]),
+			'title' => 'Phrototype Blog'
+		]);
 
 $post = new \Phrototype\Validator();
 	$post->form()->method('post')->action('/posts/add')
@@ -27,11 +29,11 @@ $post = new \Phrototype\Validator();
 		->submit('Post!', ['class' => 'pure-button pure-button-primary']);
 	$post->group('post', 'Post')->field('title')
 		->description('Post title');
-	$post->group('post')->field('content')->type('text')
+	$post->field('content', 'text')
 		->description('Post details');
 	$post->group('author', 'Author')->field('name')
 		->description('Author name');
-	$post->group('author')->field('href')
+	$post->field('href')
 		->description('Website');
 
 $app->router()->get('/posts', function() use($app) {
@@ -42,6 +44,7 @@ $app->router()->get('/posts', function() use($app) {
 });
 
 $app->router()->get('/posts/add', function() use($app, $post) {
+	$app->renderer()->template()->title = 'Add a new post';
 	return $app->render(
 		'{{{form}}}',
 		['form' => $post->html()]
@@ -49,10 +52,18 @@ $app->router()->get('/posts/add', function() use($app, $post) {
 });
 
 $app->router()->post('/posts/add', function() use($app, $post) {
-	return $app->render(
-		'<h2>data:</h2><pre>{{data}}</pre>',
-		['data' => print_r($_POST, true)]
-	);
+	if($post->validate($app->request()->post())) {
+		$model = Model::forge($post->data());
+		$success = Model\Factory::load('examples/blog/data/posts.json')
+			->add($model)
+			->save('examples/blog/data/posts.json');
+		return $app->render(
+			'{{success}}',
+			['success' => $success]
+		);
+	} else {
+		echo "it's too terrible";
+	}
 });
 
 echo $app->go();
