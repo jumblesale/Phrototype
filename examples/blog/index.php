@@ -54,15 +54,16 @@ $app->router()->get('/posts/add', function() use($app, $post) {
 $app->router()->post('/posts/add', function() use($app, $post) {
 	if($post->validate($app->request()->post())) {
 		$model = Model::forge($post->data());
-		$success = Model\Factory::load('examples/blog/data/posts.json')
+		Model\Factory::load('examples/blog/data/posts.json')
 			->add($model)
 			->save('examples/blog/data/posts.json');
-		return $app->render(
-			'{{success}}',
-			['success' => $success]
-		);
+			
+			return $app->router()->dispatch('get', '/posts');
 	} else {
-		echo "it's too terrible";
+		return $app->render(
+			'<pre>{{errors}}</pre>{{{form}}}',
+			['form' => $post->html(), 'errors' => print_r($post->messages(), 1)]
+		);
 	}
 });
 
