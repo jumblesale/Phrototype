@@ -22,13 +22,13 @@ class TemplateTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testSetTemplate() {
-		$this->assertNull($this->renderer->template());
+		$this->assertNull($this->renderer->getTemplate());
 
 		$this->renderer->template($this->template());
 
 		$this->assertEquals(
 			$this->template(),
-			$this->renderer->template()
+			$this->renderer->getTemplate()
 		);
 	}
 
@@ -76,5 +76,14 @@ class TemplateTest extends \PHPUnit_Framework_TestCase {
 			),
 			$r
 		);
+	}
+
+	public function testChangingTemplateProperties() {
+		$template = '<h1>{{title}}</h1>';
+
+		$r = $this->renderer->method('mustache')
+			->template($template, ['title' => 'pugge shoppe']);
+		$r->template()->title = 'pug shop';
+		$this->assertEquals('<h1>pug shop</h1>', $r->render());
 	}
 }
