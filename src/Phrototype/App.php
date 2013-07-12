@@ -57,6 +57,10 @@ class App {
 		return $this->renderer;
 	}
 
+	public function request() {
+		return $this->routeParser;
+	}
+
 	public function defaultRenderer($v) {
 		return $v ?
 			  $this->defaultRenderMethod = $v
