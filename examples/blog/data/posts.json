@@ -1,7 +1,7 @@
 [
 	{
 		"title": "Welcome to Phrototype!",
-		"content": "<p>A rapid prototyping framework for PHP.</p><p>This demo uses Phrototype and Pure CSS to create a pretty cool little blogging site.</p>",
+		"content": "<p>A rapid prototyping framework for PHP.</p><p>This demo uses Phrototype and Pure CSS to create a pretty cool little blogging site. If you would like to learn more about Phrototype you should totally go to its <a href=\"https://github.com/jumblesale/Phrototype\">github page</a> and read some of the words on that website.</p>",
 		"author": {
 			"name": "rob",
 			"href": "http://robsollars.co.uk"
