@@ -1,15 +1,15 @@
 PHP renderer
-	Renderer which unpacks $data nad includes the requested file
+	Renderer which unpacks $data and includes the requested file
 Lib Includer
 	Lib includer to be able to report on its libs, remove them
 Form
 	Support for arbitrary markup anywhere in the form
+	Field mutators
 Renderer
 	Twig renderer
 	Markdown renderer - https://packagist.org/packages/dflydev/markdown
-Models
-	Load from file
-	Save to file
 Exceptions
 	Loading from JSON
 	Rendering in extension
+Templates
+	Use their own render method
