@@ -79,11 +79,18 @@ class TemplateTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testChangingTemplateProperties() {
-		$template = '<h1>{{title}}</h1>';
+		$template = '<h1>{{title}}</h1><p>{{description}}</p>';
 
 		$r = $this->renderer->method('mustache')
-			->template($template, ['title' => 'pugge shoppe']);
+			->template($template,
+				['title' => 'pugge shoppe'
+				,'description' => 'buye a pugge']);
+		$this->assertEquals(
+			'<h1>pugge shoppe</h1><p>buye a pugge</p>',
+			$r->render('')
+		);
 		$r->template()->title = 'pug shop';
-		$this->assertEquals('<h1>pug shop</h1>', $r->render());
+		$r->template()->description = 'buy a pug';
+		$this->assertEquals('<h1>pug shop</h1><p>buy a pug</p>', $r->render(''));
 	}
 }

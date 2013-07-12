@@ -48,10 +48,12 @@ class Renderer {
 		return new Renderer();
 	}
 
-	public function template($t = null, $v = null) {
+	public function template($t = null, array $v = null) {
 		if($t) {
 			$this->template = $t;
-			$this->templateData = Model::forge($v);
+			if($v) {
+				$this->templateData = Model::forge($v);
+			}
 			return $this;
 		}
 		return $this->templateData;
@@ -154,10 +156,7 @@ class Renderer {
 		return $this->renderers[$methodDetails['renderer']];
 	}
 
-	private function __render($args = null) {
-		if(!$args) {
-			return;
-		}
+	private function __render($args) {
 		// No render has been passed, just dump the data
 		if(!$this->method) {
 			return $args;
@@ -177,7 +176,7 @@ class Renderer {
 		return $data;
 	}
 
-	public function render($args = null) {
+	public function render($args) {
 		$args = func_get_args();
 		$content = call_user_func_array([$this, '__render'], $args);
 		if($this->template) {
