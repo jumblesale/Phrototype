@@ -7,6 +7,11 @@ use Phrototype\Writer;
 use Phrototype\Utils;
 
 class Model extends Prototype {
+	/**
+	 * save
+	 * Save a JSON representation of this model to a file
+	 * @param location string The file to save to
+	 */
 	public function save($location) {
 		$w = new Writer();
 		$w->write($location, json_encode($this->toArray()));
