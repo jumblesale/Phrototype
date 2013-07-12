@@ -72,7 +72,7 @@ class Model extends Prototype {
 	 * @param data array An aray of data to use
 	 * @param prototype object An object to use as the model's prototype
 	 */
-	public static function forge(array $data = array(), $prototype = null) {
+	public static function forge($data = array(), $prototype = null) {
 		return Prototype::create($data, $prototype, '\Phrototype\Model');
 	}
 }
