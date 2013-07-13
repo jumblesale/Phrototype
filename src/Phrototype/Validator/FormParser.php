@@ -7,164 +7,159 @@ use Phrototype\Validator\Field;
 use Phrototype\Utils;
 
 class FormParser {
+	private $dom;
+	private $fields = [];
+	private $form;
+	private $fieldsets;
+
+	public function __construct() {
+		$this->dom = new \DOMDocument();
+	}
+
+	private function isField($field) {
+		return (
+			   gettype($field) == 'object'
+			&& is_a($field, 'Phrototype\Validator\Field')
+		);
+	}
+
+	private function isForm($form) {
+		return (
+			   gettype($form) == 'object'
+			&& is_a($form, 'Phrototype\Validator\Form')
+		);
+	}
+
 	public function parse($element) {
-		if(
-			   gettype($element) == 'object'
-			&& is_a($element, 'Phrototype\Validator\Form')
-		) {
-			return $this->parseForm($element);
+		if($this->isForm($element)) {
+			$this->dom->appendChild($this->parseForm($element));
+			return $this->dom;
 		}
-		if(
-			   gettype($element) == 'object'
-			&& is_a($element, 'Phrototype\Validator\Field')
-		) {
-			return $this->parseField($element);
+		if($this->isField($element)) {
+			$this->dom->appendChild($this->parseField($element));
+			return $this->dom;
 		}
 		if(is_array($element)) {
+			$nodes = [];
 			// Check if it's a fieldset
 			if(Utils::isHash($element)) {
-				return $this->parseFieldset($element);
+				$nodes = $this->parseFieldset($element);
+			} else {
+				$nodes = $this->parseFields($element);
 			}
-			$dom = new \DOMDocument();
-			foreach($element as $field) {
-				$dom->appendChild(
-					$dom->importNode(
-						$this->parseField($field)->documentElement,
-						true
-					)
-				);
+			foreach($nodes as $node) {
+				$this->dom->appendChild($node);
 			}
-			return $dom;
+			return $this->dom;
 		}
 		return false;
 	}
 
-	public function parseForm($form) {
-		$dom = new \DOMDocument();
-		$formNode = $dom->createElement('form');
-		$formNode->setAttribute('action', $form->action());
-		$formNode->setAttribute('method', $form->method());
-		foreach($form->attributes() as $name => $value) {
-			$formNode->setAttribute($name, $value);
-		}
-		$fields = $form->fields();
-		if(Utils::isHash($fields)) {
-			$fieldsets = $this->parse($fields);
-			foreach($fieldsets->childNodes as $fieldset) {
-				$formNode->appendChild(
-					$dom->importNode($fieldset, true)
-				);
+	public function parseFieldset($fieldset) {
+		$nodes = [];
+		foreach($fieldset as $legend => $fields) {
+			$node = $this->dom->createElement('fieldset');
+			$legendNode = $this->dom->createElement('legend');
+			$legendNode->appendChild($this->dom->createTextNode(
+				$legend
+			));
+			$node->appendChild($legendNode);
+			$fieldNodes = $this->parseFields($fields);
+			foreach($fieldNodes as $fieldNodes) {
+				$node->appendChild($fieldNodes);
 			}
-			$formNode->appendChild(
-				$dom->importNode($this->parseSubmit($form))
-			);
-			$dom->appendChild($formNode);
-			return $dom;
+			$nodes[] = $node;
 		}
-		foreach($form->fields() as $name => $field) {
-			$label = $this->parseLabel($field);
-			if($label) {
-				$formNode->appendChild(
-					$dom->importNode($label, true)
-				);
-			}
-			$fieldNode = $this->parseField($field);
-			$formNode->appendChild(
-				$dom->importNode($fieldNode->documentElement, true)
-			);
-		}
-		$formNode->appendChild($dom->importNode($this->parseSubmit($form)));
-		$dom->appendChild($formNode);
-		return $dom;
+		return $nodes;
 	}
 
-	public function parseSubmit($form) {
-		$dom = new \DOMDocument();
-		$submit = $dom->createElement('input');
+	public function parseForm($form) {
+		$node = $this->dom->createElement('form');
+		$node->setAttribute('method', $form->method());
+		$node->setAttribute('action', $form->action());
+		$this->dom->appendChild($node);
+		$fields;
+		// fields could be a hash of group => fields pairs
+		if(Utils::isHash($form->fields())) {
+			$fieldsets = $this->parseFieldset($form->fields());
+			$fields = $fieldsets;
+		} else {
+			$fields = $this->parseFields($form->fields());
+		}
+		foreach($fields as $field) {
+			$node->appendChild($field);
+		}
+		$submit = $this->dom->createElement('input');
 		$submit->setAttribute('type', 'submit');
-		$value = $form->submit() ?: 'Submit';
-		$submit->setAttribute('value', $value);
+		$submit->setAttribute('value', $form->submit() ?: 'Submit');
 		if($form->submitAttributes()) {
 			foreach($form->submitAttributes() as $name => $value) {
 				$submit->setAttribute($name, $value);
 			}
 		}
-		return $submit;
+		$node->appendChild($submit);
+		return $node;
+	}
+
+	public function parseFields($fields) {
+		$nodes = [];
+		foreach($fields as $field) {
+			$nodes[] = $this->parseField($field);
+		}
+		return $nodes;
 	}
 
 	public function parseField($field) {
-		$dom = new \DOMDocument();
-		$type = Form::types()[Form::resolveType($field)];
-		$fieldNode = $dom->createElement($type['tag']);
-		$fieldNode->setAttribute('name', $field->name());
-		foreach($field->attributes() as $name => $value) {
-			$fieldNode->setAttribute($name, $value);
+		if(!$this->isField($field)) {
+			throw new \Exception('Attempt to parse a non-Field object failed');
 		}
-		if(array_key_exists('attributes', $type)) {
-			foreach($type['attributes'] as $name => $value) {
-				$fieldNode->setAttribute($name, $value);
+		$type = $field->type() ?: 'input';
+		$node = $this->dom->createElement($type);
+		$node->setAttribute('name', $field->name());
+		if('select' == $type) {
+			$options = $this->parseOptions($field->options(), $field->value());
+			foreach($options as $option) {
+				$node->appendChild($option);
 			}
+		}
+		$node->setAttribute('name', $field->name());
+		foreach($field->attributes() as $name => $value) {
+			$node->setAttribute($name, $value);
 		}
 		if($field->container()) {
-			$details = $field->container();
-			$container = $dom->createElement($details['tag']);
-			foreach($details['attributes'] as $name => $value) {
+			$container = $this->dom->createElement($field->container()['tag']);
+			foreach($field->container()['attributes'] as $name => $value) {
 				$container->setAttribute($name, $value);
 			}
-			$container->appendChild($fieldNode);
-			$fieldNode = $container;
+			$container->appendChild($node);
+			$node = $container;
 		}
-		if($type['tag'] == 'select') {
-			foreach($field->options() as $value => $name) {
-				$option = $dom->createElement('option');
-				$option->setAttribute('value', $value);
-				$option->appendChild($dom->createTextNode($name));
-				$fieldNode->appendChild($option);
-			}
-		} else {
-			if($field->value()) {
-				$fieldNode->setAttribute('value', $field->value());
-			}
+		if($field->description()) {
+			$label = $this->parseLabel($field->description(), $field->name());
+			$label->appendChild($node);
+			$node = $label;
 		}
-		$dom->appendChild($fieldNode);
-		return $dom;
+		return $node;
 	}
 
-	public function parseFieldset($fieldset) {
-		$dom = new \DOMDocument();
-		foreach($fieldset as $name => $fields) {
-			$fieldset = $dom->createElement('fieldset');
-			$legend = $dom->createElement('legend');
-			$fieldset->appendChild($legend);
-			$legend->appendChild($dom->createTextNode($name));
-			foreach($fields as $field) {
-				$label = $this->parseLabel($field);
-				if($label) {
-					$fieldset->appendChild(
-						$dom->importNode($label, true)
-					);
-				}
-				$parsedField = $this->parseField($field);
-				$fieldset->appendChild(
-					$dom->importNode($parsedField->documentElement, true)
-				);
-			}
-			$dom->appendChild($fieldset);
-		}
-		return $dom;
+	public function parseLabel($label, $for = null) {
+		$node = $this->dom->createElement('label');
+		$node->setAttribute('for', $for);
+		$node->appendChild($this->dom->createTextNode($label));
+		return $node;
 	}
 
-	public function parseLabel($field) {
-		$dom = new \DOMDocument();
-		$description = $field->description();
-		if($description) {
-			$label = $dom->createElement('label');
-			$label->setAttribute('for', $field->name());
-			$label->appendChild(
-				$dom->createTextNode($description)
-			);
-			return $label;
+	public function parseOptions($options, $selectedValue = null) {
+		$optionNodes = [];
+		foreach($options as $value => $text) {
+			$option = $this->dom->createElement('option');
+			$option->setAttribute('value', $value);
+			if($selectedValue && $value == $selectedValue) {
+				$option->setAttribute('selected', 'selected');
+			}
+			$option->appendChild($this->dom->createTextNode($text));
+			$optionNodes[] = $option;
 		}
-		return false;
+		return $optionNodes;
 	}
 }

@@ -101,22 +101,6 @@ class Form {
 		return $this->submitAttributes;
 	}
 
-	public function buildSelectOptions($options, $defaultValue) {
-		$return = [];
-		foreach($options as $value => $text) {
-			$hash = [
-				'tag' => 'option',
-				'attributes' => ['value' => $value],
-				'children' => $text,
-			];
-			if($defaultValue === $value) {
-				$hash['attributes']['selected'] = 'selected';
-			}
-			$return[] = $hash;
-		}
-		return $return;
-	}
-
 	public static function resolveType(Field $field) {
 		if(
 			$field->type()
@@ -145,9 +129,8 @@ class Form {
 	}
 
 	public function html($elements = array()) {
-		if($elements) {
-			return $this->parser->parse($elements)->saveHtml();
-		}
-		return $this->parser->parse($this)->saveHtml();
+		$elements = $elements ?: $this;
+		$html =$this->parser->parse($elements)->saveHtml();
+		return $html;
 	}
 }
