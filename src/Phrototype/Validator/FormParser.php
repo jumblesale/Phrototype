@@ -36,7 +36,8 @@ class FormParser {
 			return $this->dom;
 		}
 		if($this->isField($element)) {
-			$this->dom->appendChild($this->parseField($element));
+			foreach($this->parseField($element) as $fieldNode);
+			$this->dom->appendChild($fieldNode);
 			return $this->dom;
 		}
 		if(is_array($element)) {
@@ -65,8 +66,10 @@ class FormParser {
 			));
 			$node->appendChild($legendNode);
 			$fieldNodes = $this->parseFields($fields);
-			foreach($fieldNodes as $fieldNodes) {
-				$node->appendChild($fieldNodes);
+			foreach($fieldNodes as $fieldNode) {
+				foreach($fieldNode as $nodeNode) {
+					$node->appendChild($nodeNode);
+				}
 			}
 			$nodes[] = $node;
 		}
@@ -77,17 +80,24 @@ class FormParser {
 		$node = $this->dom->createElement('form');
 		$node->setAttribute('method', $form->method());
 		$node->setAttribute('action', $form->action());
+		if($form->attributes()) {
+			foreach($form->attributes() as $name => $value) {
+				$node->setAttribute($name, $value);
+			}
+		}
 		$this->dom->appendChild($node);
 		$fields;
 		// fields could be a hash of group => fields pairs
 		if(Utils::isHash($form->fields())) {
 			$fieldsets = $this->parseFieldset($form->fields());
-			$fields = $fieldsets;
+			foreach($fieldsets as $fieldset) {
+				$node->appendChild($fieldset);
+			}
 		} else {
 			$fields = $this->parseFields($form->fields());
-		}
-		foreach($fields as $field) {
-			$node->appendChild($field);
+			foreach($fields as $fieldNode) {
+				$node->appendChild($fieldNode);
+			}
 		}
 		$submit = $this->dom->createElement('input');
 		$submit->setAttribute('type', 'submit');
@@ -113,10 +123,16 @@ class FormParser {
 		if(!$this->isField($field)) {
 			throw new \Exception('Attempt to parse a non-Field object failed');
 		}
-		$type = $field->type() ?: 'input';
-		$node = $this->dom->createElement($type);
+		$nodes = [];
+		$type = Form::types()[Form::resolveType($field)];
+		$node = $this->dom->createElement($type['tag']);
+		if(array_key_exists('attributes', $type)) {
+			foreach($type['attributes'] as $name => $value) {
+				$node->setAttribute($name, $value);
+			}
+		}
 		$node->setAttribute('name', $field->name());
-		if('select' == $type) {
+		if('select' == $type['tag']) {
 			$options = $this->parseOptions($field->options(), $field->value());
 			foreach($options as $option) {
 				$node->appendChild($option);
@@ -136,10 +152,10 @@ class FormParser {
 		}
 		if($field->description()) {
 			$label = $this->parseLabel($field->description(), $field->name());
-			$label->appendChild($node);
-			$node = $label;
+			$nodes[] = $label;
 		}
-		return $node;
+		$nodes[] = $node;
+		return $nodes;
 	}
 
 	public function parseLabel($label, $for = null) {
