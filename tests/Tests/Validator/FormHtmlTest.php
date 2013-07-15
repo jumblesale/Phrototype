@@ -12,7 +12,7 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCreateInput() {
 		$form = new Form();
-		$input = Field::create('username');
+		$input = Field::create('username', 'input');
 		$this->dom->loadHTML($form->html($input));
 		$input = $this->dom->getElementsByTagName('input')->item(0);
 		$this->assertNotNull($input);
@@ -28,7 +28,7 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCreateSelect() {
 		$form = new Form();
-		$select = Field::create('ducks')
+		$select = Field::create('ducks', 'select')
 			->options(explode(' ', 'mandarin tufted runner'));
 		$html = $form->html($select);
 		$this->dom->loadHTML($html);
@@ -52,7 +52,7 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCanCreateContainers() {
 		$form = new Form();
-		$input = Field::create('username')
+		$input = Field::create('username', 'input')
 			->container('div', ['class' => 'input-1']);
 		$this->dom->loadHTML($form->html($input));
 		$div = $this->dom->getElementsByTagName('div')->item(0);
@@ -67,9 +67,9 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCanCreateForm() {
 		$form = Form::create([
-			Field::create('username'),
-			Field::create('password'),
-			Field::create('favourite duck')
+			Field::create('username', 'input'),
+			Field::create('password', 'input'),
+			Field::create('favourite duck', 'select')
 				->options(explode(' ', 'mandarin tufted runner'))
 		])
 			->method('post')
@@ -101,12 +101,12 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 
 		$fields = [
 			'Login details' => [
-				Field::create('username'),
-				Field::create('password'),
+				Field::create('username', 'input'),
+				Field::create('password', 'input'),
 			],
 			'Your details' => [
-				Field::create('name'),
-				Field::create('email'),
+				Field::create('name', 'input'),
+				Field::create('email', 'input'),
 			]
 		];
 
@@ -150,7 +150,7 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 
 	public function testLabels() {
 		$form = Form::create([
-			Field::create('username')->description('Username:'),
+			Field::create('username', 'input')->description('Username:'),
 		])
 			->method('post')
 			->action('/submit.pl');
@@ -171,7 +171,7 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 
 	public function testSubmit() {
 		$form = Form::create([
-			Field::create('username')->description('Username:'),
+			Field::create('username', 'input')->description('Username:'),
 		]);
 
 		$this->assertNull($form->submit());
@@ -190,7 +190,7 @@ class FormHtmlTest extends \PHPUnit_Framework_TestCase {
 		);
 
 		$form = Form::create([
-			Field::create('username')->description('Username:'),
+			Field::create('username', 'input')->description('Username:'),
 		])->submit('send it hence', ['class' => 'pink-button']);
 
 		$this->dom->loadHTML($form->html());

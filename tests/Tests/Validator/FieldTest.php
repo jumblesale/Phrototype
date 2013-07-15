@@ -22,7 +22,7 @@ class FieldTest extends \PHPUnit_Framework_TestCase {
 				'class' => 'input-1 input-2',
 				'disabled' => 'disabled',
 				'clearlynotanattribute' => 'whatever',
-			]);
+		]);
 		$this->assertEquals(
 			[
 				'class' => 'input-1 input-2',
