@@ -101,4 +101,24 @@ class AddTest extends \PHPUnit_Framework_TestCase {
 			$loaded
 		);
 	}
+
+	public function testUnshift() {
+		$ducks = Model\Factory::load([
+			['name' => 'tufted'],
+			['name' => 'mandarin'],
+			['name' => 'runner']
+		]);
+
+		$ducks->unshift(Model::forge(['name' => 'mallard']));
+
+		$this->assertEquals(
+			[
+				['name' => 'mallard'],
+				['name' => 'tufted'],
+				['name' => 'mandarin'],
+				['name' => 'runner'],
+			],
+			$ducks->toArray()
+		);
+	}
 }
