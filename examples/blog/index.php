@@ -39,7 +39,8 @@ $post = new \Phrototype\Validator();
 $app->router()->get('/posts', function() use($app) {
 	return $app->render(
 		$app->read('views/post.mustache'),
-		['posts' => Model\Factory::load('examples/blog/data/posts.json')->models()]
+		['posts' => Model\Factory::load('examples/blog/data/posts.json')
+			->reverse()->models()]
 	);
 });
 

@@ -13,7 +13,12 @@ class Collection implements
 	private $ids = [];
 
 	public function models() {
-		return $this->contents;
+		$models = [];
+		$ids = [];
+		foreach($this->ids as $index => $id) {
+			$models[] = $this->contents[$id];
+		}
+		return $models;
 	}
 
 	public function count() {
