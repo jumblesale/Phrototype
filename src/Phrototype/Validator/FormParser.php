@@ -96,7 +96,9 @@ class FormParser {
 		} else {
 			$fields = $this->parseFields($form->fields());
 			foreach($fields as $fieldNode) {
-				$node->appendChild($fieldNode);
+				foreach($fieldNode as $fieldNodeNode) {
+					$node->appendChild($fieldNodeNode);
+				}
 			}
 		}
 		$submit = $this->dom->createElement('input');
