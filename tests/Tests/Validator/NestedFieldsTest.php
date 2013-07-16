@@ -4,7 +4,7 @@ namespace Phrototype\Tests;
 
 use Phrototype\Validator;
 
-class FieldTest extends \PHPUnit_Framework_TestCase {
+class NestedFieldTest extends \PHPUnit_Framework_TestCase {
 	public function testValidatingNestedFields() {
 		$validator = new Validator();
 		$validator->field('user[username]');

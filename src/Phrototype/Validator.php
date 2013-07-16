@@ -4,6 +4,7 @@ namespace Phrototype;
 
 use Phrototype\Validator\Field;
 use Phrototype\Validator\Form;
+use Phrototype\Validator\ArraySyntaxParser;
 
 class Validator {
 	private $fields;
@@ -13,9 +14,11 @@ class Validator {
 	private $messages;
 	private $form;
 	private $data;
+	private $arrayParser;
 
 	public function __construct() {
 		$this->form = new Form();
+		$this->arrayParser = new ArraySyntaxParser();
 	}
 
 	public static function create() {
@@ -72,9 +75,9 @@ class Validator {
 		$success = true;
 		foreach($this->fields as $name => $field) {
 			$messages[$name] = [];
-			$value = array_key_exists($name, $data) ?
-				  $data[$name]
-				: null;
+			$value = $this->arrayParser->parse($data, $name);
+			Logue::Log("Validating field $name with "
+				. ($value ? "value: $value" : 'no value'), Logue::DEBUG);
 			if($field->required() && !$field->nullable() && $value == null) {
 				$success = false;
 				array_push($messages[$name], "$name is a required field");
