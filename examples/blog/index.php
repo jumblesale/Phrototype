@@ -27,7 +27,9 @@ $post = new \Phrototype\Validator();
 	$post->form()->method('post')
 		->action('/posts/add')
 		->attributes(['class' => 'pure-form pure-form-stacked'])
-		->submit('Post!', ['class' => 'pure-button pure-button-primary']);
+		->submit('Post!', ['class' => 'pure-button pure-button-primary'])
+		->errorContainer('div')
+		->errorAttributes(['class' => 'pure-button pure-button-error']);
 	$post->group('post', 'Post');
 	$post
 		->field('title')
@@ -69,8 +71,8 @@ $app->router()->post('/posts/add', function() use($app, $post) {
 			return $app->router()->dispatch('get', '/posts');
 	} else {
 		return $app->render(
-			'<pre>{{errors}}</pre>{{{form}}}',
-			['form' => $post->html(), 'errors' => print_r($post->messages(), 1)]
+			'{{{form}}}',
+			['form' => $post->html()]
 		);
 	}
 });
