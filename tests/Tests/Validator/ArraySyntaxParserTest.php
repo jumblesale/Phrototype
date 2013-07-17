@@ -14,7 +14,7 @@ class ArraySyntaxParserTest extends \PHPUnit_Framework_TestCase {
 			$this->parser->parse(
 				[],
 				'depth-1'
-			)
+			)->value()
 		);
 	}
 
@@ -24,7 +24,7 @@ class ArraySyntaxParserTest extends \PHPUnit_Framework_TestCase {
 			$this->parser->parse(
 				['depth-1' => 3],
 				'depth-1'
-			)
+			)->value()
 		);
 	}
 
@@ -34,7 +34,7 @@ class ArraySyntaxParserTest extends \PHPUnit_Framework_TestCase {
 			$this->parser->parse(
 				['sea' => ['monster' => 5]],
 				'sea[monster]'
-			)
+			)->value()
 		);
 	}
 
@@ -54,7 +54,24 @@ class ArraySyntaxParserTest extends \PHPUnit_Framework_TestCase {
 					]
 				]],
 				'sea[pony][trek][star]'
-			)
+			)->value()
 		);
+	}
+
+	public function testToArray() {
+		$this->parser->parse(
+			['sea' => [
+				'monster' => 5,
+				'horse' => [
+					'shoe' => 12,
+				],
+				'pony' => [
+					'trek' => [
+						'star' => 11
+					]
+				]
+			]],
+			'sea[pony][trek][star]'
+		)->toArray();
 	}
 }

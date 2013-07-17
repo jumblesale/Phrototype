@@ -33,5 +33,9 @@ class NestedFieldTest extends \PHPUnit_Framework_TestCase {
 		];
 
 		$this->assertTrue($validator->validate($validData));
+		$this->assertEquals(
+			$validData,
+			$validator->data()
+		);
 	}
 }
