@@ -14,11 +14,11 @@ class Validator {
 	private $messages;
 	private $form;
 	private $data;
-	private $arrayParser;
+	private $parser;
 
 	public function __construct() {
 		$this->form = new Form();
-		$this->arrayParser = new ArraySyntaxParser();
+		$this->parser = new ArraySyntaxParser();
 	}
 
 	public static function create() {
@@ -74,8 +74,9 @@ class Validator {
 		$values = [];
 		$success = true;
 		foreach($this->fields as $name => $field) {
+			$this->parser->parse($data, $name);
 			$messages[$name] = [];
-			$value = $this->arrayParser->parse($data, $name);
+			$value = $this->parser->value();
 			Logue::Log("Validating field $name with "
 				. ($value ? "value: $value" : 'no value'), Logue::DEBUG);
 			if($field->required() && !$field->nullable() && $value == null) {
@@ -86,11 +87,27 @@ class Validator {
 				if($field->messages()) {
 					$messages[$name] = $field->messages();
 				}
+				$field->value($value);
 			}
-			$values[$name] = $value;
+			// If there's no path to the value, it's just a flat array
+			if(!$this->parser->path()) {
+				$values[$name] = $this->parser->value();
+			} else {
+				// name is in the form of user[details][name][...]
+				// Extract the path out and merge the arrays
+				$root = $this->parser->root();
+				if(!array_key_exists($root, $values)) {
+					$values[$root] = [];
+				}
+				$merged = array_merge_recursive(
+					$values[$root],
+					$this->parser->toArray()
+				);
+				$values[$root] = $merged;
+			}
 		}
-		$this->messages = $messages;
 		$this->data = $values;
+		$this->messages = $messages;
 		return $success;
 	}
 
