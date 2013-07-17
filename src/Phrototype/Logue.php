@@ -31,4 +31,11 @@ class Logue {
 		}
 		return false;
 	}
+
+	public static function dump($label, $data, $level = 5) {
+		return self::log(
+			implode(': ', [$label, print_r($data, true)]),
+			$level
+		);
+	}
 }

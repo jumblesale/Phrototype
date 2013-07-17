@@ -9,7 +9,7 @@ use Phrototype\Utils;
 // Given a bunch of fields, make me a form!
 class Form {
 	// These are HTML elements perhaps you recognise them
-	private static  $types = [
+	private static $types = [
 		  'input'		=> [
 		  	'tag' => 'input',
 		  	'attributes' => ['type' => 'text'],
@@ -44,6 +44,9 @@ class Form {
 	private $method;
 	private $action;
 	private $attributes = [];
+	private $errors;
+	private $errorContainer = 'div';
+	private $errorAttributes = [];
 
 	private $parser;
 
@@ -97,8 +100,40 @@ class Form {
 		return $this->attributes;
 	}
 
+	public function errors(array $v = array()) {
+		if($v) {
+			$this->errors = $v;
+			return $this;
+		}
+		return $this->errors;
+	}
+
+	public function errorContainer($v = null) {
+		if($v) {
+			$this->errorContainer = $v;
+			return $this;
+		}
+		return $this->errorContainer;
+	}
+
+	public function errorAttributes(array $v = array()) {
+		if($v) {
+			$this->errorAttributes = $v;
+			return $this;
+		}
+		return $this->errorAttributes;
+	}
+
 	public function submitAttributes() {
 		return $this->submitAttributes;
+	}
+
+	public static function tags() {
+		$tags = [];
+		foreach(self::$types as $type => $details) {
+			$tags[$details['tag']] = $details['tag'];
+		}
+		return $tags;
 	}
 
 	public static function resolveType(Field $field) {

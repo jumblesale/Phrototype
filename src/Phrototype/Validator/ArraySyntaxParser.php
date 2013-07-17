@@ -63,6 +63,12 @@ class ArraySyntaxParser {
 		return $this->root;
 	}
 
+	/**
+	 * toArray
+	 * If a path has been set, turn it into a nested hash
+	 * ['user', 'details', 'name'] becomes
+	 * ['user' => ['details' => ['name' => $value]]]
+	 */
 	public function toArray() {
 		if(!$this->path) {
 			return $this->value;
