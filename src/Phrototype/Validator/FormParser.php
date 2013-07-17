@@ -33,6 +33,7 @@ class FormParser {
 	public function parse($element) {
 		if($this->isForm($element)) {
 			$this->dom->appendChild($this->parseForm($element));
+			$this->parseErrors($element);
 			return $this->dom;
 		}
 		if($this->isField($element)) {
@@ -113,6 +114,42 @@ class FormParser {
 		return $node;
 	}
 
+	// arrow'd!
+	public function parseErrors($form) {
+		if($form->errors()) {
+			$errors = $form->errors();
+			foreach(Form::tags() as $tag) {
+				foreach($this->dom->getElementsByTagName($tag) as $input) {
+					$name = $input->getAttribute('name');
+					if(array_key_exists($name, $errors)) {
+						$container = $this->dom->createElement(
+							$form->errorContainer()
+						);
+						if($form->errorAttributes()) {
+							foreach(
+								$form->errorAttributes() as
+								$attrName => $attrValue
+							) {
+								$container->setAttribute(
+									$attrName,
+									$attrValue
+								);
+							}
+						}
+						foreach($errors[$name] as $error) {
+							$container->appendChild(
+								$this->dom->createTextNode($error)
+							);
+						}
+						$input->parentNode->insertBefore($container, $input);
+						$input->parentNode->removeChild($input);
+						$container->parentNode->insertBefore($input, $container);
+					}
+				}
+			}
+		}
+	}
+
 	public function parseFields($fields) {
 		$nodes = [];
 		foreach($fields as $field) {
@@ -143,6 +180,9 @@ class FormParser {
 		$node->setAttribute('name', $field->name());
 		foreach($field->attributes() as $name => $value) {
 			$node->setAttribute($name, $value);
+		}
+		if($field->required() && !$field->nullable()) {
+			$node->setAttribute('required', 'required');
 		}
 		if($field->container()) {
 			$container = $this->dom->createElement($field->container()['tag']);

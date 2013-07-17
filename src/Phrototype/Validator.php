@@ -53,7 +53,7 @@ class Validator {
 		return $this->fields;
 	}
 
-	public function messages($name) {
+	public function messages($name = null) {
 		if($name) {
 			return $this->messages[$name];
 		}
@@ -81,7 +81,7 @@ class Validator {
 				. ($value ? "value: $value" : 'no value'), Logue::DEBUG);
 			if($field->required() && !$field->nullable() && $value == null) {
 				$success = false;
-				array_push($messages[$name], "$name is a required field");
+				array_push($messages[$name], "This is a required field");
 			} else {
 				$success = $success && $field->validate($value);
 				if($field->messages()) {
@@ -108,6 +108,7 @@ class Validator {
 		}
 		$this->data = $values;
 		$this->messages = $messages;
+		$this->form->errors($messages);
 		return $success;
 	}
 
