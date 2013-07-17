@@ -24,16 +24,23 @@ $app->renderer()
 		]);
 
 $post = new \Phrototype\Validator();
-	$post->form()->method('post')->action('/posts/add')
+	$post->form()->method('post')
+		->action('/posts/add')
 		->attributes(['class' => 'pure-form pure-form-stacked'])
 		->submit('Post!', ['class' => 'pure-button pure-button-primary']);
-	$post->group('post', 'Post')->field('title')
+	$post->group('post', 'Post');
+	$post
+		->field('title')
 		->description('Post title');
-	$post->field('content', 'text')
+	$post
+		->field('content', 'text')
 		->description('Post details');
-	$post->group('author', 'Author')->field('name')
+	$post->group('author', 'Author');
+	$post
+		->field('author[name]')
 		->description('Author name');
-	$post->field('href')
+	$post
+		->field('author[href]')
 		->description('Website');
 
 $app->router()->get('/posts', function() use($app) {
