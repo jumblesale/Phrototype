@@ -137,7 +137,17 @@ class Collection implements
 		return $this;
 	}
 
-	public function find($field, $value) {
+	public function find($field, $value = null) {
+		if(is_numeric($field) && $value === null) {
+			// id search
+			return $this->find('id', $field);
+		}
+		if($field == 'id') {
+			if(array_key_exists($value, $this->ids)) {
+				return $this->contents[$this->ids[$value]];
+			}
+			return false;
+		}
 		$matches = [];
 		foreach($this->ids as $index => $id) {
 			$model = $this->contents[$id];

@@ -53,6 +53,17 @@ $app->router()->get('/posts', function() use($app) {
 	);
 });
 
+$app->router()->get('/posts/view/:id', function($id) use($app) {
+	return $app->render(
+		$app->read('views/post.mustache'),
+		['posts' => [
+			Model\Factory::load('examples/blog/data/posts.json')
+				->find('id', $id)
+			]
+		]
+	);
+});
+
 $app->router()->get('/posts/add', function() use($app, $post) {
 	$app->renderer()->template()->title = 'Add a new post';
 	return $app->render(
