@@ -77,6 +77,17 @@ class CollectionsOperationsTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
+	public function testFindWithImplicitIds() {
+		$countries = $this->countries();
+
+		$monaco = $countries->find(2);
+
+		$this->assertEquals(
+			'monaco',
+			$monaco->name
+		);
+	}
+
 	public function testOrderByNumeric() {
 		$countries = $this->countries()->order('area', false);
 		$expected = ['russia', 'monaco', 'vatican city'];
