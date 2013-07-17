@@ -71,11 +71,24 @@ class App {
 		return $this->renderer->importer()->import($libs);
 	}
 
+	/**
+	 * redirect
+	 * Redirect the request to a different handler
+	 * NOTE: this will always result in a GET request
+	 * @param path string The path to redirect to
+	 * @return null die()s on completion
+	 */
+	public function redirect($path) {
+		Logue::Log("Redirecting to get:$path", Logue::INFO);
+		header('Location: ' . $path, true, 302);
+		die();
+	}
+
 	// Dispatch the request to the registered route
 	public function go($verb = null, $path = null) {
 		$verb = $verb ?: $this->routeParser->verb();
 		$path = $path ?: $this->routeParser->path();
-		Logue::Log("Dispatching: $verb:$path", Logue::INFO);
+		Logue::Log("Dispatching to $verb:$path", Logue::INFO);
 		if($this->router->matches($verb, $path)) {
 			return $this->router->dispatch(
 				$verb,

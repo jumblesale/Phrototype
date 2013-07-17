@@ -68,7 +68,7 @@ $app->router()->post('/posts/add', function() use($app, $post) {
 			->add($model)
 			->save('examples/blog/data/posts.json');
 			
-			return $app->router()->dispatch('get', '/posts');
+			return $app->redirect('/posts');
 	} else {
 		return $app->render(
 			'{{{form}}}',
