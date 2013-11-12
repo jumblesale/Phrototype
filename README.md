@@ -26,7 +26,3 @@ features
 my pony is tickled
 ------------------
 Have a look at the blogging example: https://github.com/jumblesale/Phrototype/tree/master/examples/blog
-
-love
-----
-Send me a postcard
